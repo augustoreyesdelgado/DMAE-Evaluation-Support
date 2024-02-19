@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMAE Evaluation Support</title>
+    <style>
+
+        table {
+            width: 80%;
+            margin: auto;
+            margin-top: 20px; 
+        }
+
+        td {
+            padding: 10px;
+            width: 50%;
+            font-size: large;
+        }
+
+        th {
+            padding: 10px;
+            font-size: large;
+        }
+
+        td:first-child {
+            text-align: left;
+        }
+
+    </style>
+</head>
+<body>
+    <% if(login) { %>
+        <%- include('headeri') %>
+
+    <div style="text-align: center; margin-top: 6vh; font-family: lucida console; text-decoration: underline;">
+
+        <h1>DMAE Evaluation Support</h1>
+
+    </div>
+
+    <div class="contenedor">
+
+    <div class="div-50">
+    <h1>Imagen Analisada</h1>
+
+    <div>
+        <% if (image) { %>
+            <img src="<%= image %>" alt="Result Image" style="max-width: 100%;">
+        <% } %>
+    </div>
+
+    </div>
+
+    <div class="div-30">
+        <h1>Resultados</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nivel de Afección</th>
+                    <th>Precisión</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (result && Array.isArray(result)) { %>
+                    <% var isFirst = true; 
+                    backgroundColor = 'rgb(255, 255, 255)';
+                    mensaje = "Ha ocurrido un error, vuelva a intentar."; 
+                    %>
+                    <% result.forEach(function(item) { %>
+                        <% var scoreFormatted = parseFloat(item.score) * 100; %>
+                        <% if (isFirst && item.label === 'leve') { 
+                            backgroundColor = 'rgb(180, 200, 70)';
+                            mensaje = "Posible presencia de degeneración macular, se recomienda revisión";
+                            isFirst = false;
+                        } else if (isFirst && item.label === 'moderada') {
+                            backgroundColor = 'rgb(255, 200, 78)';
+                            mensaje = "Presencia de degeneración macular, se recomienda revisión profunda";
+                            isFirst = false;
+                        } else if (isFirst && item.label === 'avanzada') {
+                            backgroundColor = 'rgb(255, 40, 40)';
+                            mensaje = "Presencia de degeneración macular severa, se recomienda revisión de inmediato";
+                            isFirst = false;
+                        } else if (isFirst && item.label === 'no dmae') {
+                            backgroundColor = 'rgb(134, 255, 78)';
+                            mensaje = "No se han encontrado señales preocupantes";
+                            isFirst = false;
+                        }
+                        %>
+                        <tr>
+                            <td><strong><%= item.label %></strong></td>
+                            <td style="background-color: rgba(255, 184, 78, 0.628); border: 3px solid rgb(159, 159, 159);"><strong><%= scoreFormatted.toFixed(2) %>%</strong></td>
+                        </tr>
+                        
+                    <% }); %>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: <%= backgroundColor %>; border: 3px solid rgb(159, 159, 159);" colspan="2"><strong><%= mensaje %>.</strong></td>
+                    </tr>
+        </tbody>
+        </table>
+    
+        <form action="/" method="post" enctype="multipart/form-data" style="margin-top: 10px;">
+            <input type="hidden" name="imageData" id="imageDataInput" value="">
+            <button type="submit" class="button-M">Guardar Reporte</button>
+        </form>
+        <a href="inicio" style="text-decoration: none;">
+            <button style="margin-top: 10px;" class="button-M">Descartar</button>
+        </a>            
+                <% } else { %>
+                    <tr>
+                        <td colspan="2">Aquí se mostrará el resultado. Vuelva a intentar</td>
+                    </tr>
+        </tbody>
+        </table>
+        <a href="inicio" style="text-decoration: none;">
+            <button style="margin-top: 10px;" class="button-M">Regresar</button>
+        </a>
+                <% } %>
+            
+    </div>
+
+    </div>
+
+    <%- include('footer') %>
+    <% } %>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMAE Evaluation Support</title>
+    <style>
+
+     table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: auto;
+            margin-top: 20px; 
+        }
+
+        td {
+            padding: 10px;
+            width: 50%;
+            font-size: large;
+        }
+
+        td:first-child {
+            text-align: left;
+        }
+
+        input[type="text"],
+        input[type="date"] {
+            width: 100%;
+            height: 3vh; 
+            box-sizing: border-box;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: large;
+        }
+        
+        select{
+            width: 100%;
+            height: 3vh; 
+            box-sizing: border-box;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            font-size: large;
+        }
+
+    </style>
+</head>
+<body>
+    <% if(login) { %>
+    <%- include('headeri') %>
+
+    <div style="text-align: center; margin-top: 6vh; font-family: lucida console; text-decoration: underline;">
+
+        <h1>DMAE Evaluation Support</h1>
+
+    </div>
+
+    <div class="contenedor">
+
+    <div class="section-20">
+        <h1>Bienvenido</h1>
+        <br>
+        
+        <h1>Dr. <%= name %></h1>
+        
+        <br>
+        <a href="" style="text-decoration: none;">
+            <button style="margin-top: 10px;" class="button-G">Ver Historial</button>
+        </a>
+        <br><br>
+        <a href="" style="text-decoration: none;">
+            <button style="margin-top: 10px;" class="button-G">Actualizar Datos</button>
+        </a>
+    </div>
+
+
+
+    <div class="section-30">
+        <h1>Registrar Paciente</h1>
+        <br>
+
+        <form action="/registropaciente" method="post">
+            <table>
+                <tr>
+                    <td>Nombre(s)</td>
+                    <td><input type="text" name="nameP" id="nameP" placeholder="Jos&eacute;"></td>
+                </tr>
+                <tr>
+                    <td>Primer Apellido</td>
+                    <td><input type="text" name="flastnameP" placeholder="Hernadez"></td>
+                </tr>
+                <tr>
+                    <td>Segundo Apellido</td>
+                    <td><input type="text" name="slastnameP" placeholder="Hernadez"></td>
+                </tr>
+                <tr>
+                    <td>Fecha de Nacimiento</td>
+                    <td><input type="date" name="birthdateP"></td>
+                </tr>
+                <tr>
+                    <td>G&eacute;nero</td>
+                    <td>
+                        
+                        <label>
+                            <input type="radio" name="gender" value="Masculino" checked>
+                            Masculino
+                        </label>
+                    
+                        <label>
+                            <input type="radio" name="gender" value="Femenino">
+                            Femenino
+                        </label>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>Estado:</td>
+                    <td>
+                        <select name="stateP">
+                            <option value="Aguascalientes">Aguascalientes</option>
+                            <option value="Baja California">Baja California</option>
+                            <option value="Baja California Sur">Baja California Sur</option>
+                            <option value="Campeche">Campeche</option>
+                            <option value="Chiapas">Chiapas</option>
+                            <option value="Chihuahua">Chihuahua</option>
+                            <option value="Coahuila">Coahuila</option>
+                            <option value="Colima">Colima</option>
+                            <option value="Durango">Durango</option>
+                            <option value="Estado de México">Estado de México</option>
+                            <option value="Guanajuato">Guanajuato</option>
+                            <option value="Guerrero">Guerrero</option>
+                            <option value="Hidalgo">Hidalgo</option>
+                            <option value="Jalisco">Jalisco</option>
+                            <option value="Michoacán">Michoacán</option>
+                            <option value="Morelos">Morelos</option>
+                            <option value="Nayarit">Nayarit</option>
+                            <option value="Nuevo León">Nuevo León</option>
+                            <option value="Oaxaca">Oaxaca</option>
+                            <option value="Puebla">Puebla</option>
+                            <option value="Querétaro">Querétaro</option>
+                            <option value="Quintana Roo">Quintana Roo</option>
+                            <option value="San Luis Potosí">San Luis Potosí</option>
+                            <option value="Sinaloa">Sinaloa</option>
+                            <option value="Sonora">Sonora</option>
+                            <option value="Tabasco">Tabasco</option>
+                            <option value="Tamaulipas">Tamaulipas</option>
+                            <option value="Tlaxcala">Tlaxcala</option>
+                            <option value="Veracruz">Veracruz</option>
+                            <option value="Yucatán">Yucatán</option>
+                            <option value="Zacatecas">Zacatecas</option>
+                            <option value="Ciudad de México">Ciudad de México</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Localidad:</td>
+                    <td><input type="text" name="cityP" placeholder="C&oacute;rdoba"></td>
+                </tr>
+            </table>
+
+            <br>
+            <button type="submit" class="button-G">Registrar Paciente</button>
+        </form>
+
+    </div>
+    <div class="miDiv">
+    <h1>Análisis de Imagen</h1>
+
+    
+
+    <select style="width: 95%; margin-bottom: 5%;border-radius: 5px;" id="paciente" name="paciente">
+        <% for (var i = 0; i <= listapacientes.length-1; i++){ %>
+            <option value="<%= listapacientes[i].id %>"><%= listapacientes[i].name%></option>
+        <% } %>
+    </select>
+    
+    <br>
+
+    <label>
+        <input type="radio" name="lado" value="derecho" checked>
+        Ojo Derecho
+    </label>
+
+    <label>
+        <input type="radio" name="lado" value="izquierdo">
+        Ojo Izquierdo
+    </label>
+    <br>
+    <br>
+
+    <div class="cargando" id="indicadorCarga">
+        <i class="fas fa-spinner fa-spin fa-3x"></i>
+        <!-- Ícono de spinner de Font Awesome -->
+    </div>
+
+    <div id="dropContainer" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+        <p>Selecciona o arrastra y suelta tu imagen aquí</p>
+    </div>
+    <form action="/results" method="post" enctype="multipart/form-data" style="margin-top: 10px;">
+        <input type="file" name="image" accept="image/*" id="imageInput" style="display: none;">
+        <input type="hidden" name="imageData" id="imageDataInput" value="">
+        <button type="submit" class="button-G">Generar Diagnostico</button>
+    </form>
+
+    </div>
+
+    </div>
+    
+    <%- include('footer') %>
+
+    <script>
+        function previewImage(file) {
+            const container = document.getElementById('dropContainer');
+            const dataInput = document.getElementById('imageDataInput');
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                container.style.backgroundImage = `url('${e.target.result}')`;
+
+                // Almacena la URL de datos en el campo oculto
+                dataInput.value = e.target.result;
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            const dropContainer = document.getElementById('dropContainer');
+            dropContainer.classList.add('highlight');
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            const dropContainer = document.getElementById('dropContainer');
+            dropContainer.classList.remove('highlight');
+
+            const files = event.dataTransfer.files;
+
+            if (files.length > 0) {
+                const input = document.getElementById('imageInput');
+                input.files = files;
+
+                // Muestra la imagen después de soltarla
+                previewImage(files[0]);
+            }
+        }
+
+        // Activa el input de archivo al hacer clic en el contenedor de arrastrar y soltar
+        document.getElementById('dropContainer').addEventListener('click', function () {
+            document.getElementById('imageInput').click();
+        });
+
+        // Actualiza la vista previa cuando se selecciona un archivo utilizando el input de archivo
+        document.getElementById('imageInput').addEventListener('change', function () {
+            const files = this.files;
+            if (files.length > 0) {
+                previewImage(files[0]);
+            }
+        });
+        /*
+        document.addEventListener("DOMContentLoaded", function() {
+            var indicadorCarga = document.getElementById("indicadorCarga");
+            var botonActivar = document.getElementById("botonActivar");
+
+            // Verifica si el indicador de carga ya debería estar activo según sessionStorage
+            if (sessionStorage.getItem("indicadorCargaActivo") === "true") {
+                indicadorCarga.style.display = "block";
+            }
+
+            botonActivar.addEventListener("click", function() {
+                // Muestra el indicador de carga después de hacer clic en el botón
+                indicadorCarga.style.display = "block";
+
+                // Guarda el estado del indicador de carga en sessionStorage
+                sessionStorage.setItem("indicadorCargaActivo", "true");
+
+                // Simula una carga
+                setTimeout(function() {
+                    // Oculta el indicador después de un tiempo (simulando carga completa)
+                    indicadorCarga.style.display = "none";
+
+                    // Borra el estado del indicador de carga en sessionStorage después de ocultarlo
+                    sessionStorage.removeItem("indicadorCargaActivo");
+                }, 10000); // Tiempo en milisegundos (3 segundos en este ejemplo)
+            });
+        });
+        */
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <% if(typeof alert != "undefined") { %>
+        <script>
+            Swal.fire({
+            title: '<%= alertTitle %>',
+            text: '<%= alertMessage %>',
+            icon: '<%= alertIcon %>',
+            showConfirmButton: <%= showConfirmButton %>,
+            timer: <%= time %>
+            }).then(()=>{
+                window.location='/<%= ruta %>'
+            })
+        </script>
+    <% } %>
+
+    <% }else { %>
+        <h1>Debe iniciar sesi&oacute;n</h1><br>
+        <a href="/" style="text-decoration: none;">
+            <button style="margin-top: 10px;" class="button-GO">Cancelar</button>
+        </a>
+    <% } %>
+</body>
+
+</html>

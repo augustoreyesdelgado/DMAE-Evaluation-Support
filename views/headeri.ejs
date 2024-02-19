@@ -1,0 +1,31 @@
+<!-- header.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="/resources/css/style.css">
+    <!-- Agrega cualquier otro estilo que necesites para el header -->
+</head>
+<body>
+
+    <header>
+        <!-- Enlace al inicio (izquierda) -->
+        <nav style="margin-left: 15px;">
+            <ul>
+                <li style="font-size: larger;"><a href="/inicio" style="">DeepEye</a></li>
+            </ul>
+        </nav>
+
+        <!-- Menú desplegable (derecha) -->
+        <div class="dropdown" style="margin-right: 15px;">
+            <button class="button-T">Menú <i class="fa fa-caret-down"></i></button>
+            <div class="dropdown-content">
+                <a href="/logout">Cerrar Sesi&oacute;n</a>
+                <!-- Agrega más elementos del menú según sea necesario -->
+            </div>
+        </div>
+    </header>
+</body>

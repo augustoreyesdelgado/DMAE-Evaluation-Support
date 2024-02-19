@@ -1,0 +1,229 @@
+const express = require('express');
+const app = express();
+const multer = require('multer');
+//captura de datos para el formulario
+app.use(express.urlencoded({extended: false}));
+app.use(express.json());
+//invocar dotenn
+const dotenv = require('dotenv');
+dotenv.config({path:'.env/.env'})
+//directorio publico
+app.use('/resources', express.static('public'));
+app.use('/resources', express.static(__dirname + 'public'));
+//motor de plantillas
+app.set('view engine', 'ejs');
+//bcryptsjs
+const bcryptsjs = require('bcryptjs');
+// variables de sesion
+const session = require('express-session');
+app.use(session({
+    secret:'secret',
+    resave: true,
+    saveUninitialized: true
+}))
+//Invocar coneccion a base de datos
+const coneccion = require('./DB/db');
+// Configuración de Multer
+const storage = multer.memoryStorage(); // Almacena la imagen en memoria
+const upload = multer({ storage: storage });
+//Rutas de usuario
+app.get('/', (req, res)=>{
+    res.render('login', {msg:'UN MENSAJE DE BIENVENIDA'});
+})
+
+app.get('/register', (req, res)=>{
+    if(req.session.loggedin){
+        res.render('inicio',{
+            login: true,
+            name: req.session.name
+            });
+    }else{
+        res.render('register');
+    }
+})
+//Login
+app.post('/auth', async (req, res)=>{
+    const user_name = req.body.user;
+    const pass= req.body.pass;
+    
+    if(user_name && pass){
+        const results = await coneccion.query(user_name);
+        if(results.length == 0 || !(await bcryptsjs.compare(pass, results[0].password))){
+            res.render('login',{
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "Usuario y/o Contraseña Incorrectas",
+            alertIcon: 'error',
+            showConfirmButton: false,
+            time: 1000,
+            ruta: ''
+            });
+        }else{
+            req.session.loggedin = true;
+            req.session.name = results[0].name;
+            req.session.idD = results[0].id;
+            //carga pacientes
+            req.session.pacientes = await coneccion.pacientes(req.session.idD);
+            res.render('login',{
+                alert: true,
+                alertTitle: "Acceso Exitoso",
+                alertMessage: "Bienvenido Dr. "+req.session.name,
+                alertIcon: 'success',
+                showConfirmButton: false,
+                time: 2000,
+                ruta: 'inicio'
+            });
+        }
+    }else{
+        res.send('Por favor, ingrese usuario y/o contraseña');
+    }
+
+})
+//auttentificación de paginas
+//inicio
+app.get('/inicio', (req, res)=>{
+    if(req.session.loggedin){
+        res.render('inicio',{
+            login: true,
+            name: req.session.name,
+            id: req.session.idD,
+            listapacientes : req.session.pacientes
+        });
+    }else{
+        res.render('login',{
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "Debe Iniciar Sesión",
+            alertIcon: 'error',
+            showConfirmButton: false,
+            time: 2000,
+            ruta: ''
+            });
+    }
+})
+//logout
+app.get('/logout', (req, res)=>{
+    req.session.destroy(()=>{
+        res.redirect('/');
+    });
+})
+//Registro de usuario
+app.post('/register', async (req, res)=>{
+    let passwordHash = await bcryptsjs.hash(req.body.pass, 8);
+    const datos={
+    user_name : req.body.user,
+    name : req.body.name,
+    flastname : req.body.flastname,
+    slastname : req.body.slastname,
+    cedula : req.body.cedula,
+    pass : passwordHash,
+    birthdate: req.body.birthdate || '2000/01/01', 
+    state: req.body.state || "Veracruz", 
+    city: req.body.city || "Córdoba",
+    type: '0'
+    }
+    coneccion.agregar('usuarios', datos).then(result => {
+        res.render('register', {
+            alert: true,
+            alertTitle: "Registro",
+            alertMessage: "¡Registro Exitoso!",
+            alertIcon: 'success',
+            showConfirmButton: false,
+            time: 2000,
+            ruta: ''
+        });
+    })
+    .catch(error => {
+        console.log(error);
+        // Manejo del error, como enviar una respuesta de error al cliente
+    });
+})
+//Registro de paciente
+app.post('/registropaciente', async (req, res)=>{
+    const datos={
+    name : req.body.nameP,
+    flastname : req.body.flastnameP,
+    slastname : req.body.slastnameP,
+    birthdate: req.body.birthdateP || '2000/01/01',
+    gender : req.body.gender,
+    state: req.body.stateP || "Veracruz", 
+    city: req.body.cityP || "Córdoba",
+    type: '1',
+    idD: req.session.idD
+    }
+
+    const results = await coneccion.agregarP(datos);
+
+    if(results.length == 0){
+        res.render('inicio',{
+        login: true,
+        name: req.session.name,
+        id: req.session.idD,
+        listapacientes: req.session.pacientes,    
+        alert: true,
+        alertTitle: "Error",
+        alertMessage: "Algo ha salido mal, intentelo de nuevo por favor",
+        alertIcon: 'error',
+        showConfirmButton: false,
+        time: 1500,
+        ruta: 'inicio'
+        });
+    }else{
+        req.session.pacientes = await coneccion.pacientes(req.session.idD);
+        res.render('inicio', {
+        login: true,
+        name: req.session.name,
+        id: req.session.idD,
+        listapacientes: req.session.pacientes,
+        alert: true,
+        alertTitle: "Registro",
+        alertMessage: "¡Registro Exitoso!",
+        alertIcon: 'success',
+        showConfirmButton: false,
+        time: 1500,
+        ruta: 'inicio'
+        });
+    }
+})
+//analisis de imagen
+app.post('/results', upload.single('image'), async (req, res) => {
+    try {
+        if (!req.file) {
+            // No se ha subido ningún archivo
+            res.render('inicio', {login: true, n, result: { error: "No se ha seleccionado ningún archivo" } });
+            return;
+        }
+
+        const data = req.file.buffer; // Obtén el contenido del archivo directamente desde el buffer
+
+        const response = await fetch(
+            "https://api-inference.huggingface.co/models/Augusto777/vit-base-patch16-224-dmae-va-U",
+            {
+                headers: { Authorization: "Bearer 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" },
+                method: "POST",
+                body: data,
+            }
+        );
+
+        const result = await response.json();
+        
+        res.render('results', { result, login: true, image: `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}` });
+    } catch (error) {
+        console.error("Error:", error);
+        res.render('inicio', { login: true, name: req.session.name, result: { error: "Error inesperado" } });
+    }
+});
+
+/*const data = {
+        user : req.body.user,
+        name : req.body.name,
+        flastname : req.body.flastname,
+        slastname : req.body.slastname,
+        cedula : req.body.cedula,
+        passwordHash : await bcryptsjs.hash(pass, 8)
+    }
+    coneccion.insertar(data);*/
+
+app.listen(3000, (req, res)=>{
+    console.log("Server is running in http://localhost:3000");
+})
