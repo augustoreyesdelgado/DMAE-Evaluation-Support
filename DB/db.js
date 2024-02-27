@@ -77,7 +77,7 @@ function query(user_name){
 function pacientes(idd){
     return new Promise((resolve, reject) => {
         const pool = new Pool(dbconfig); // Crear una nueva pool para cada consulta
-        pool.query(`SELECT pa.id, ge.name 
+        pool.query(`SELECT pa.id, pa.gender, ge.name, ge.flastname, ge.slastname, ge.birthdate, ge.state, ge.city 
         FROM pacientes as pa 
         INNER JOIN datos_generales as ge ON ge.id = pa.id 
         WHERE pa.idd = '${idd}';

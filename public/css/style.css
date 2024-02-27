@@ -66,6 +66,45 @@ body {
     /*padding-top: 20vh;*/
 }
 
+.section-90 {
+    width: 90%;
+    background-color: rgba(135, 135, 135, 0.546); /* Color de fondo para visualización */
+    text-align: center; /* Alineación del texto al centro dentro del div */
+    /*padding: 20px; /* Espaciado interno para mejor visualización */
+    border-radius: 12px; /* Radio de las esquinas redondeadas */
+    border: 2px solid  rgba(24, 24, 24, 0.897);  /* Borde oscuro */
+    margin-top: 2%;
+    margin-right: 5%;
+    margin-left: 5%;
+    /*padding-top: 20vh;*/
+}
+
+.section-90i {
+    width: 88%;
+    /*background-color: rgba(135, 209, 86, 0.546); /* Color de fondo para visualización */
+    text-align: center; /* Alineación del texto al centro dentro del div */
+    padding: 20px; /* Espaciado interno para mejor visualización */
+    /*border-radius: 12px; /* Radio de las esquinas redondeadas */
+    /*border: 2px solid  rgba(24, 24, 24, 0.897);  /* Borde oscuro */
+    margin-right: 5%;
+    margin-left: 5%;
+    /*padding-top: 20vh;*/
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Define 4 columnas iguales */
+    gap: 10px; /* Espacio entre elementos */
+    margin-right: 5%;
+    margin-left: 5%;
+    /*padding-top: 20vh;*/
+}
+
+.grid-item {
+    /*background-color: #ccc;*/
+    text-align: center;
+}
+
 .section-30 {
     width: 30%;
     background-color: rgba(135, 135, 135, 0.546); /* Color de fondo para visualización */
@@ -153,6 +192,36 @@ body {
     background-color: #a7a7a7; /* Color de fondo gris oscuro */
 }
 
+.button-GW {
+    padding: 8px 15px;
+    width: 60%;
+    border: 2px solid #333; /* Borde gris oscuro */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #e3e3e3; /* Color de fondo gris oscuro */
+    color: rgb(0, 0, 0); /* Texto blanco */
+    font-weight: bold; /* Texto en negritas */
+    cursor: pointer;
+}
+.button-GW:hover {
+    background-color: #bae6ff; /* Color de fondo gris oscuro */
+    color: rgb(16, 16, 16);
+}
+
+.button-GR {
+    padding: 8px 15px;
+    width: 60%;
+    border: 2px solid #333; /* Borde gris oscuro */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #646464; /* Color de fondo gris oscuro */
+    color: white; /* Texto blanco */
+    font-weight: bold; /* Texto en negritas */
+    cursor: pointer;
+}
+.button-GR:hover {
+    background-color: #ff4a4a; /* Color de fondo gris oscuro */
+    color: rgb(0, 0, 0);
+}
+
 .button-GO {
     padding: 8px 15px;
     width: 60%;
@@ -179,6 +248,20 @@ body {
     cursor: pointer;
 }
 .button-M:hover {
+    background-color: #a7a7a7; /* Color de fondo gris oscuro */
+}
+
+.button-R {
+    padding: 8px 15px;
+    width: 10%;
+    border: 2px solid #333; /* Borde gris oscuro */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #646464; /* Color de fondo gris oscuro */
+    color: white; /* Texto blanco */
+    font-weight: bold; /* Texto en negritas */
+    cursor: pointer;
+}
+.button-R:hover {
     background-color: #a7a7a7; /* Color de fondo gris oscuro */
 }
 

@@ -101,6 +101,48 @@ app.get('/inicio', (req, res)=>{
             });
     }
 })
+app.get('/records', (req, res)=>{
+    if(req.session.loggedin){
+        res.render('records',{
+            login: true,
+            name: req.session.name,
+            id: req.session.idD,
+            listapacientes : req.session.pacientes
+        });
+    }else{
+        res.render('login',{
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "Debe Iniciar Sesión",
+            alertIcon: 'error',
+            showConfirmButton: false,
+            time: 2000,
+            ruta: ''
+            });
+    }
+})
+
+app.get('/patients', (req, res)=>{
+    if(req.session.loggedin){
+        res.render('patients',{
+            login: true,
+            name: req.session.name,
+            id: req.session.idD,
+            listapacientes : req.session.pacientes
+        });
+    }else{
+        res.render('login',{
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "Debe Iniciar Sesión",
+            alertIcon: 'error',
+            showConfirmButton: false,
+            time: 2000,
+            ruta: ''
+            });
+    }
+})
+
 //logout
 app.get('/logout', (req, res)=>{
     req.session.destroy(()=>{

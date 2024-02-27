@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMAE Evaluation Support</title>
+    <style>
+
+     table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: auto;
+        }
+
+        th, td {
+            padding: 3px;
+            font-size: large;
+            width: 20%; /* Establece el ancho de cada columna al 25% del ancho total */
+        }
+
+        td:first-child {
+            text-align: left;
+        }
+
+        input[type="text"],
+        input[type="date"] {
+            width: 100%;
+            height: 3vh; 
+            box-sizing: border-box;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: large;
+        }
+        
+        select{
+            width: 100%;
+            height: 3vh; 
+            box-sizing: border-box;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            font-size: large;
+        }
+        .table-container {
+        max-height: 300px; /* Altura máxima para la tabla */
+        overflow-y: auto; /* Añade scroll vertical si es necesario */
+        }
+
+        .pagination {
+        margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <% if(login) { %>
+    <%- include('headeri') %>
+
+    <div style="text-align: center; margin-top: 6vh; font-family: lucida console; text-decoration: underline;">
+
+        <h1>DMAE Evaluation Support</h1>
+
+        <a href="/inicio" style="text-decoration: none;">
+            <button style="margin-top: 20px; margin-right: 5%; float: right;" class="button-R">Regresar</button>
+        </a>
+
+    </div>
+
+    <div class="contenedor">
+    
+    <div class="section-90">
+        <h1>Historial de An&aacute;lisis</h1>
+
+        <div class="grid-container">
+            <div class="grid-item">
+                <table>
+                    <tr>
+                        <td>Nombre</td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="nameP" id="nameP" placeholder="Jos&eacute; Hern&aacute;ndez"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="grid-item">
+                <table>
+                    <tr>
+                        <td>Fecha (Registro)</td>
+                    </tr>
+                    <tr>
+                        <td><input type="date" name="fecha" id="fecha" placeholder="Jos&eacute;"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="grid-item">
+                <table>
+                    <tr>
+                        <td style="font-size: medium;">
+                                <input type="radio" name="afeccion" value="" checked>
+                                Sin Afecci&oacute;n
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: medium;">
+                                <input type="radio" name="afeccion" value="" >
+                                Afecci&oacute;n Leve
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: medium;">
+                                <input type="radio" name="afeccion" value="" >
+                                Afecci&oacute;n Moderada
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: medium;">
+                                <input type="radio" name="afeccion" value="" >
+                                Afecci&oacute;n Avanzada
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="grid-item">
+                <table style="float: right;">
+                    <tr>
+                        <td> <button style="margin-top: 2px; " class="button-GW">Filtrar</button></td>
+                    </tr>
+                    <tr>
+                        <td> <button style="margin-top: 2px;" class="button-G">Imprimir</button></td>
+                    </tr>
+                    <tr>
+                        <td> <button style="margin-top: 2px;" class="button-GR">Eliminar</button></td>
+                    </tr>
+                </table>
+            </div>
+          </div>
+
+        <div class="section-90i">
+            <div class="table-container">
+                <table id="my-table" style="width: 100%; margin-top: 0px; border-color:  rgb(24, 24, 24);" border="2">
+                    <thead style="background-color: rgb(155, 155, 155);">
+                      <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Fecha</th>
+                        <th>Resultado</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="table-body" style="background-color: white;">
+                      <% listapacientes.forEach(paciente => { %>
+                        <tr>
+                          <td style="text-align: center;"><%= paciente.id %></td>
+                          <td style="text-align: center;"><%= paciente.name %> <%= paciente.flastname %> <%= paciente.slastname %></td>
+                          <td style="text-align: center;"><%= paciente.fecha %></td>
+                          <td style="text-align: center;"><%= paciente.resultado %></td>
+                          <td>
+                            <input type="radio" name="idP" value="<%= paciente.id %>">
+                          </td>
+                        </tr>
+                      <% }); %>
+                    </tbody>
+                  </table>
+                  <div class="pagination" style="float: right;">
+                    <button id="prev-page">Anterior</button>
+                    <span id="current-page">1</span>
+                    <button id="next-page">Siguiente</button>
+                  </div>
+              </div>
+        </div>
+    </div>
+
+    </div>
+    
+    <%- include('footer') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <% if(typeof alert != "undefined") { %>
+        <script>
+            Swal.fire({
+            title: '<%= alertTitle %>',
+            text: '<%= alertMessage %>',
+            icon: '<%= alertIcon %>',
+            showConfirmButton: <%= showConfirmButton %>,
+            timer: <%= time %>
+            }).then(()=>{
+                window.location='/<%= ruta %>'
+            })
+        </script>
+    <% } %>
+
+    <% }else { %>
+        <h1>Debe iniciar sesi&oacute;n</h1><br>
+        <a href="/" style="text-decoration: none;">
+            <button style="margin-top: 10px;" class="button-GO">Cancelar</button>
+        </a>
+    <% } %>
+</body>
+
+</html>
