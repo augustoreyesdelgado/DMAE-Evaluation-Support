@@ -152,6 +152,9 @@ app.get('/logout', (req, res)=>{
 //Registro de usuario
 app.post('/register', async (req, res)=>{
     let passwordHash = await bcryptsjs.hash(req.body.pass, 8);
+    const dan = license((await responseAPI(req.body.cedula)).items[0]);
+    if(dan.name.toLowerCase() ===req.body.name.toLowerCase() && dan.lastname.toLowerCase()===req.body.flastname.toLowerCase() && 
+        dan.lastname2.toLowerCase()==req.body.slastname.toLowerCase() && dan.id==req.body.cedula){
     const datos={
     user_name : req.body.user,
     name : req.body.name,
@@ -179,6 +182,17 @@ app.post('/register', async (req, res)=>{
         console.log(error);
         // Manejo del error, como enviar una respuesta de error al cliente
     });
+}else{
+    res.render('register', {
+        alert: true,
+        alertTitle: "Error",
+        alertMessage: "La cedula no coincide o no exise",
+        alertIcon: 'error',
+        showConfirmButton: false,
+        time: 2000,
+        ruta: ''
+    });
+}
 })
 //Registro de paciente
 app.post('/registropaciente', async (req, res)=>{
@@ -265,6 +279,57 @@ app.post('/results', upload.single('image'), async (req, res) => {
         passwordHash : await bcryptsjs.hash(pass, 8)
     }
     coneccion.insertar(data);*/
+
+//Verifica cedula
+const responseAPI = async (license) => {
+    const query = fetch("https://cedulaprofesional.sep.gob.mx/cedula/buscaCedulaJson.action", {
+        credentials: "include",
+        headers: {
+            "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:99.0) Gecko/20100101 Firefox/99.0",
+            "Accept": "*/*",
+            "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "X-Requested-With": "XMLHttpRequest",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "Sec-GPC": "1"
+        },
+        referrer: "https://cedulaprofesional.sep.gob.mx/cedula/presidencia/indexAvanzada.action",
+        body: `json=%7B%22maxResult%22%3A%221000%22%2C%22nombre%22%3A%22%22%2C%22paterno%22%3A%22%22%2C%22materno%22%3A%22%22%2C%22idCedula%22%3A%22${license}%22%7D`,
+        method: "POST",
+        mode: "cors"
+    })
+    return (await query).json()
+}
+
+const license = ({
+    anioreg,
+    curp,
+    desins,
+    idCedula,
+    materno,
+    maternoM,
+    nombre,
+    nombreM,
+    paterno,
+    paternoM,
+    sexo,
+    tipo,
+    titulo
+} = {}) => ({
+    registrationYear: anioreg,
+    curp,
+    institution: desins,
+    id: idCedula,
+    lastname2: `${materno}${maternoM ? ' ' + maternoM : ''}`,
+    name: `${nombre}${nombreM ? ' ' + nombreM : ''}`,
+    lastname: `${paterno}${paternoM ? ' ' + paternoM : ''}`,
+    gender: sexo,
+    type: tipo,
+    title: titulo
+})
+
 
 app.listen(3000, (req, res)=>{
     console.log("Server is running in http://localhost:3000");
