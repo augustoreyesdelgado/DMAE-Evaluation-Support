@@ -118,7 +118,12 @@
                         <td> <button style="margin-top: 2px;" class="button-G">Editar</button></td>
                     </tr>
                     <tr>
-                        <td> <button style="margin-top: 2px;" class="button-GR">Eliminar</button></td>
+                        <td>
+                            <form action="/eliminarpacientes" id="formulario-e" method="post">
+                                <input type="hidden" name="idP" id="idP">
+                                <button style="margin-top: 2px;" class="button-GR">Eliminar</button>
+                            </form>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -153,19 +158,35 @@
                           <td style="text-align: center;"><%= paciente.state %></td>
                           <td style="text-align: center;"><%= paciente.city %></td>
                           <td>
-                            <input type="radio" name="idP" value="<%= paciente.id %>">
+                            <input type="radio" name="idP" value="<%= paciente.id %>" id="idP">
                           </td>
                         </tr>
                       <% }); %>
                     </tbody>
                   </table>
               </div>
+            
         </div>
     </div>
 
     </div>
     
     <%- include('footer') %>
+
+    <script>
+        // Obtener referencia a los radio buttons
+        const radioButtons = document.querySelectorAll('input[type="radio"][id="idP"]');
+        
+        // Agregar un event listener a cada radio button
+        radioButtons.forEach(radioButton => {
+            radioButton.addEventListener('change', function() {
+                // Obtener el valor del radio button seleccionado
+                const valorSeleccionado = this.value;
+                // Asignar el valor al campo oculto del formulario
+                document.getElementById('idP').value = valorSeleccionado;
+            });
+        });
+        </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     

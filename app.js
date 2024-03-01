@@ -326,6 +326,84 @@ app.post('/registroreporte', async (req, res)=>{
     }
 })
 
+//Eliminar reporte
+app.post('/eliminarreporte', async (req, res)=>{
+    console.log(req.body.idP);
+    const results = await coneccion.eliminar(req.body.idP);
+
+    if(results){
+        req.session.pacientes = await coneccion.pacientes(req.session.idD);
+        req.session.reportes = await coneccion.reportes(req.session.idD);
+        res.render('records', {
+        login: true,
+        name: req.session.name,
+        id: req.session.idD,
+        listapacientes: req.session.pacientes,
+        listareportes: req.session.reportes,
+        alert: true,
+        alertTitle: "Eliminación",
+        alertMessage: "¡Registro Borrado!",
+        alertIcon: 'success',
+        showConfirmButton: false,
+        time: 1500,
+        ruta: 'records'
+        });
+    }else{
+        res.render('inicio',{
+            login: true,
+            name: req.session.name,
+            id: req.session.idD,
+            listapacientes: req.session.pacientes,    
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "Algo ha salido mal, intentelo de nuevo por favor",
+            alertIcon: 'error',
+            showConfirmButton: false,
+            time: 1500,
+            ruta: 'inicio'
+            });
+    }
+})
+
+//Eliminar reporte
+app.post('/eliminarpacientes', async (req, res)=>{
+    console.log(req.body.idP);
+    const results = await coneccion.eliminarp(req.body.idP);
+
+    if(results){
+        req.session.pacientes = await coneccion.pacientes(req.session.idD);
+        req.session.reportes = await coneccion.reportes(req.session.idD);
+        res.render('patients', {
+        login: true,
+        name: req.session.name,
+        id: req.session.idD,
+        listapacientes: req.session.pacientes,
+        listareportes: req.session.reportes,
+        alert: true,
+        alertTitle: "Eliminación",
+        alertMessage: "¡Registro Borrado!",
+        alertIcon: 'success',
+        showConfirmButton: false,
+        time: 1500,
+        ruta: 'patients'
+        });
+    }else{
+        res.render('inicio',{
+            login: true,
+            name: req.session.name,
+            id: req.session.idD,
+            listapacientes: req.session.pacientes,    
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "Algo ha salido mal, intentelo de nuevo por favor",
+            alertIcon: 'error',
+            showConfirmButton: false,
+            time: 1500,
+            ruta: 'inicio'
+            });
+    }
+})
+
 /*const data = {
         user : req.body.user,
         name : req.body.name,

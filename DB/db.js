@@ -101,11 +101,37 @@ function reportes(idd){
     });
 }
 
+function eliminar(id){
+    return new Promise((resolve, reject) => {
+        const pool = new Pool(dbconfig); // Crear una nueva pool para cada consulta
+        pool.query(`DELETE FROM reportes WHERE id = '${id}';`, (error, result) => {
+            return error ? reject(error) : resolve(result.rows);
+        });
+    });
+}
+
+async function eliminarp(id){
+    await eliminar1('reportes', 'id_p',id);
+    await eliminar1('pacientes', 'id',id);
+    return await eliminar1('datos_generales', 'id', id);
+}
+
+function eliminar1(tabla,identificador,id){
+    return new Promise((resolve, reject) => {
+        const pool = new Pool(dbconfig); // Crear una nueva pool para cada consulta
+        pool.query(`DELETE FROM ${tabla} WHERE ${identificador} = '${id}';`, (error, result) => {
+            return error ? reject(error) : resolve(result.rows);
+        });
+    });
+}
+
 module.exports = {
     agregar,
     agregarP,
     query,
     pacientes,
     reportes,
+    eliminar,
+    eliminarp,
     insert
 }
