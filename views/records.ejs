@@ -138,20 +138,26 @@
                 <table id="my-table" style="width: 100%; margin-top: 0px; border-color:  rgb(24, 24, 24);" border="2">
                     <thead style="background-color: rgb(155, 155, 155);">
                       <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
+                        <th>Paciente</th>
                         <th>Fecha</th>
                         <th>Resultado</th>
+                        <th>Precisi&oacute;n</th>
                         <th></th>
                       </tr>
                     </thead>
                     <tbody id="table-body" style="background-color: white;">
-                      <% listapacientes.forEach(paciente => { %>
+                      <% listareportes.forEach(paciente => { %>
                         <tr>
-                          <td style="text-align: center;"><%= paciente.id %></td>
                           <td style="text-align: center;"><%= paciente.name %> <%= paciente.flastname %> <%= paciente.slastname %></td>
-                          <td style="text-align: center;"><%= paciente.fecha %></td>
-                          <td style="text-align: center;"><%= paciente.resultado %></td>
+                          <td style="text-align: center;"><%
+                            const analys_date = new Date(paciente.analys_date);
+                            const year = analys_date.getFullYear();
+                            const month = ('0' + (analys_date.getMonth() + 1)).slice(-2); 
+                            const day = ('0' + analys_date.getDate()).slice(-2);
+                            const formattedBirthdate = `${year}-${month}-${day}`;
+                            %> <%= formattedBirthdate %></td>
+                          <td style="text-align: center;"><%= paciente.phase %></td>
+                          <td style="text-align: center;"><%= paciente.acuracy %>%</td>
                           <td>
                             <input type="radio" name="idP" value="<%= paciente.id %>">
                           </td>
@@ -159,11 +165,6 @@
                       <% }); %>
                     </tbody>
                   </table>
-                  <div class="pagination" style="float: right;">
-                    <button id="prev-page">Anterior</button>
-                    <span id="current-page">1</span>
-                    <button id="next-page">Siguiente</button>
-                  </div>
               </div>
         </div>
     </div>

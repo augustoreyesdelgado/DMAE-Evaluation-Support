@@ -32,7 +32,6 @@
 <body>
     <% if(login) { %>
         <%- include('headeri') %>
-
     <div style="text-align: center; margin-top: 6vh; font-family: lucida console; text-decoration: underline;">
 
         <h1>DMAE Evaluation Support</h1>
@@ -73,18 +72,26 @@
                             backgroundColor = 'rgb(180, 200, 70)';
                             mensaje = "Posible presencia de degeneración macular, se recomienda revisión";
                             isFirst = false;
+                            acuracy= scoreFormatted.toFixed(2);
+                            phase = item.label;
                         } else if (isFirst && item.label === 'moderada') {
                             backgroundColor = 'rgb(255, 200, 78)';
                             mensaje = "Presencia de degeneración macular, se recomienda revisión profunda";
                             isFirst = false;
+                            acuracy= scoreFormatted.toFixed(2);
+                            phase = item.label;
                         } else if (isFirst && item.label === 'avanzada') {
                             backgroundColor = 'rgb(255, 40, 40)';
                             mensaje = "Presencia de degeneración macular severa, se recomienda revisión de inmediato";
                             isFirst = false;
+                            phase = item.label;
+                            acuracy= scoreFormatted.toFixed(2);
                         } else if (isFirst && item.label === 'no dmae') {
                             backgroundColor = 'rgb(134, 255, 78)';
                             mensaje = "No se han encontrado señales preocupantes";
                             isFirst = false;
+                            acuracy= scoreFormatted.toFixed(2);
+                            phase = item.label;
                         }
                         %>
                         <tr>
@@ -103,8 +110,11 @@
         </tbody>
         </table>
     
-        <form action="/" method="post" enctype="multipart/form-data" style="margin-top: 10px;">
-            <input type="hidden" name="imageData" id="imageDataInput" value="">
+        <form action="/registroreporte" method="post">
+            <input type="hidden" name="idpaciente" id="idpaciente" value="<%= id_p %>">
+            <input type="hidden" name="phase" id="phase" value="<%= phase %>">
+            <input type="hidden" name="acuracy" id="acuracy" value="<%= acuracy %>">
+            <input type="hidden" name="side" id="side" value="<%= side %>">
             <button type="submit" class="button-M">Guardar Reporte</button>
         </form>
         <a href="inicio" style="text-decoration: none;">

@@ -171,39 +171,41 @@
 
     
 
-    <select style="width: 95%; margin-bottom: 5%;border-radius: 5px;" id="paciente" name="paciente">
-        <% for (var i = 0; i <= listapacientes.length-1; i++){ %>
-            <option value="<%= listapacientes[i].id %>"><%= listapacientes[i].name%> <%= listapacientes[i].flastname%> <%= listapacientes[i].slastname%></option>
-        <% } %>
-    </select>
-    
-    <br>
-
-    <label>
-        <input type="radio" name="lado" value="derecho" checked>
-        Ojo Derecho
-    </label>
-
-    <label>
-        <input type="radio" name="lado" value="izquierdo">
-        Ojo Izquierdo
-    </label>
-    <br>
-    <br>
-
-    <div class="cargando" id="indicadorCarga">
-        <i class="fas fa-spinner fa-spin fa-3x"></i>
-        <!-- Ícono de spinner de Font Awesome -->
-    </div>
-
-    <div id="dropContainer" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-        <p>Selecciona o arrastra y suelta tu imagen aquí</p>
-    </div>
     <form action="/results" method="post" enctype="multipart/form-data" style="margin-top: 10px;">
+        <select style="width: 95%; margin-bottom: 5%;border-radius: 5px;" id="id_p" name="id_p">
+            <% for (var i = 0; i <= listapacientes.length-1; i++){ %>
+                <option value="<%= listapacientes[i].id %>"><%= listapacientes[i].name%> <%= listapacientes[i].flastname%> <%= listapacientes[i].slastname%></option>
+            <% } %>
+        </select>
+        <br>
+    
+        <label>
+            <input type="radio" name="side" value="derecho" checked>
+            Ojo Derecho
+        </label>
+    
+        <label>
+            <input type="radio" name="side" value="izquierdo">
+            Ojo Izquierdo
+        </label>
+        <br>
+        <br>
+    
+        <div class="cargando" id="indicadorCarga">
+            <i class="fas fa-spinner fa-spin fa-3x"></i>
+            <!-- Ícono de spinner de Font Awesome -->
+        </div>
+    
+        <div id="dropContainer" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+            <p>Selecciona o arrastra y suelta tu imagen aquí</p>
+        </div>
+    
         <input type="file" name="image" accept="image/*" id="imageInput" style="display: none;">
         <input type="hidden" name="imageData" id="imageDataInput" value="">
+        <br><br>
         <button type="submit" class="button-G">Generar Diagnostico</button>
     </form>
+    
 
     </div>
 

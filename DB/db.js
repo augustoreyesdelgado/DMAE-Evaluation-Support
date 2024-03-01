@@ -87,9 +87,25 @@ function pacientes(idd){
     });
 }
 
+function reportes(idd){
+    return new Promise((resolve, reject) => {
+        const pool = new Pool(dbconfig); // Crear una nueva pool para cada consulta
+        pool.query(`SELECT r.id, r.acuracy, dg.name, dg.flastname, dg.slastname, r.analys_date, r.phase, r.acuracy, pa.idd
+        FROM reportes r
+        JOIN pacientes pa ON r.id_p = pa.id
+        JOIN datos_generales dg ON pa.id = dg.id
+         WHERE pa.idd = '${idd}';
+        `, (error, result) => {
+            return error ? reject(error) : resolve(result.rows);
+        });
+    });
+}
+
 module.exports = {
     agregar,
     agregarP,
     query,
-    pacientes
+    pacientes,
+    reportes,
+    insert
 }

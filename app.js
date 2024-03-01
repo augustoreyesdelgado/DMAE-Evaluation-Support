@@ -2,8 +2,8 @@ const express = require('express');
 const app = express();
 const multer = require('multer');
 //captura de datos para el formulario
-app.use(express.urlencoded({extended: false}));
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 //invocar dotenn
 const dotenv = require('dotenv');
 dotenv.config({path:'.env/.env'})
@@ -64,6 +64,7 @@ app.post('/auth', async (req, res)=>{
             req.session.idD = results[0].id;
             //carga pacientes
             req.session.pacientes = await coneccion.pacientes(req.session.idD);
+            req.session.reportes = await coneccion.reportes(req.session.idD);
             res.render('login',{
                 alert: true,
                 alertTitle: "Acceso Exitoso",
@@ -87,7 +88,8 @@ app.get('/inicio', (req, res)=>{
             login: true,
             name: req.session.name,
             id: req.session.idD,
-            listapacientes : req.session.pacientes
+            listapacientes : req.session.pacientes,
+            listareportes: req.session.reportes
         });
     }else{
         res.render('login',{
@@ -107,7 +109,7 @@ app.get('/records', (req, res)=>{
             login: true,
             name: req.session.name,
             id: req.session.idD,
-            listapacientes : req.session.pacientes
+            listareportes : req.session.reportes
         });
     }else{
         res.render('login',{
@@ -263,12 +265,66 @@ app.post('/results', upload.single('image'), async (req, res) => {
 
         const result = await response.json();
         
-        res.render('results', { result, login: true, image: `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}` });
+        res.render('results', { 
+            result, 
+            login: true, 
+            id_p: req.body.id_p,
+            side: req.body.side,
+            image: `data:${req.file.mimetype};base64,
+            ${req.file.buffer.toString('base64')}`,
+         });
     } catch (error) {
         console.error("Error:", error);
         res.render('inicio', { login: true, name: req.session.name, result: { error: "Error inesperado" } });
     }
 });
+const fechaActual = new Date();
+//Registro de reporte
+app.post('/registroreporte', async (req, res)=>{
+    const datos={
+    id_p : req.body.idpaciente,
+    side : req.body.side || 'derecho',
+    phase : req.body.phase || 'avanzada',
+    acuracy: req.body.acuracy || '95.5',
+    image : req.body.image || 'abc/abc.jpg',
+    analys_date: fechaActual
+    }
+
+    const results = await coneccion.insert('reportes',datos);
+
+    if(results.length == 0){
+        res.render('inicio',{
+        login: true,
+        name: req.session.name,
+        id: req.session.idD,
+        listapacientes: req.session.pacientes,    
+        alert: true,
+        alertTitle: "Error",
+        alertMessage: "Algo ha salido mal, intentelo de nuevo por favor",
+        alertIcon: 'error',
+        showConfirmButton: false,
+        time: 1500,
+        ruta: 'inicio'
+        });
+    }else{
+        req.session.pacientes = await coneccion.pacientes(req.session.idD);
+        req.session.reportes = await coneccion.reportes(req.session.idD);
+        res.render('inicio', {
+        login: true,
+        name: req.session.name,
+        id: req.session.idD,
+        listapacientes: req.session.pacientes,
+        listareportes: req.session.reportes,
+        alert: true,
+        alertTitle: "Registro",
+        alertMessage: "¡Registro de Reporte Exitoso!",
+        alertIcon: 'success',
+        showConfirmButton: false,
+        time: 1500,
+        ruta: 'inicio'
+        });
+    }
+})
 
 /*const data = {
         user : req.body.user,
