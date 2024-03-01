@@ -145,6 +145,84 @@ app.get('/patients', (req, res)=>{
     }
 })
 
+app.get('/updateuser', async (req, res)=>{
+    const usuario = await coneccion.usuario(req.session.idD);
+    if(req.session.loggedin){
+        res.render('updateuser',{
+            login: true,
+            name: req.session.name,
+            id: req.session.idD,
+            datos: usuario,
+            listapacientes : req.session.pacientes
+        });
+    }else{
+        res.render('login',{
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "Debe Iniciar Sesión",
+            alertIcon: 'error',
+            showConfirmButton: false,
+            time: 2000,
+            ruta: ''
+            });
+    }
+})
+
+//Actualizar usuario
+app.post('/updateuserd', async (req, res)=>{
+    const dan = license((await responseAPI(req.body.cedula)).items[0]);
+    if(dan.name.toLowerCase() ===req.body.name.toLowerCase() && dan.lastname.toLowerCase()===req.body.flastname.toLowerCase() && 
+        dan.lastname2.toLowerCase()==req.body.slastname.toLowerCase() && dan.id==req.body.cedula){
+    const datos={
+    user_name : req.body.user,
+    name : req.body.name,
+    flastname : req.body.flastname,
+    slastname : req.body.slastname,
+    cedula : req.body.cedula,
+    birthdate: req.body.birthdate || '2000/01/01', 
+    state: req.body.state || "Veracruz", 
+    city: req.body.city || "Córdoba",
+    type: '0'
+    }
+    console.log(req.session.idD);
+    coneccion.updateu(datos, req.session.idD).then(result => {
+        res.render('inicio', {
+            login: true,
+            name: req.session.name,
+            id: req.session.idD,
+            listapacientes: req.session.pacientes,
+            listareportes: req.session.reportes,
+            alert: true,
+            alertTitle: "Actualización",
+            alertMessage: "¡Actualización Exitosa!",
+            alertIcon: 'success',
+            showConfirmButton: false,
+            time: 2000,
+            ruta: 'inicio'
+        });
+    })
+    .catch(error => {
+        console.log(error);
+        // Manejo del error, como enviar una respuesta de error al cliente
+    });
+}else{
+    res.render('inicio', {
+        login: true,
+        name: req.session.name,
+        id: req.session.idD,
+        listapacientes: req.session.pacientes,
+        listareportes: req.session.reportes,
+        alert: true,
+        alertTitle: "Error",
+        alertMessage: "La cedula no coincide o no exise",
+        alertIcon: 'error',
+        showConfirmButton: false,
+        time: 2000,
+        ruta: 'inicio'
+    });
+}
+})
+
 //logout
 app.get('/logout', (req, res)=>{
     req.session.destroy(()=>{
