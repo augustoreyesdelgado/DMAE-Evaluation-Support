@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMAE Evaluation Support</title>
+    <style>
+
+        table {
+               border-collapse: collapse;
+               width: 80%;
+               margin: auto;
+               margin-top: 20px; 
+           }
+   
+           td {
+               padding: 10px;
+               width: 50%;
+               font-size: large;
+           }
+   
+           td:first-child {
+               text-align: left;
+           }
+   
+           input[type="text"],
+           input[type="password"],
+           input[type="date"] {
+               width: 100%;
+               height: 3vh; 
+               box-sizing: border-box;
+               border-radius: 4px;
+               border: 1px solid #ddd;
+               font-size: large;
+           }
+           
+           select{
+               width: 100%;
+               height: 3vh; 
+               box-sizing: border-box;
+               border-radius: 4px;
+               background-color: #f2f2f2;
+               font-size: large;
+           }
+   
+       </style>
+</head>
+<body>
+    <%- include('header') %>
+    <div style="text-align: center; margin-top: 6vh; font-family: lucida console; text-decoration: underline;">
+
+        <h1>DMAE Evaluation Support</h1>
+
+    </div>
+    <div class="contenedor">
+
+        <div class="section-50"><p style="font-size: 26pt;">
+            Puede actualizar sus datos mediante el siguiente formulario</p></div>
+
+    <div class="section-30" style="height: 87%;">
+        <h2>Sus Datos</h2>
+        <form action="/updatepatientsd" method="post">
+            <table>
+                <tr>
+                    <td>Nombre(s)</td>
+                    <td><input type="text" name="nameP" id="nameP" placeholder="Jos&eacute;" value="<%= datos[0].name %>" required></td>
+                </tr>
+                <tr>
+                    <td>Primer Apellido</td>
+                    <td><input type="text" name="flastnameP" id="flastnameP" placeholder="Hernandez" value="<%= datos[0].flastname %>" required></td>
+                </tr>
+                <tr>
+                    <td>Segundo Apellido</td>
+                    <td><input type="text" name="slastnameP" id="slastnameP" placeholder="Hernandez" value="<%= datos[0].slastname %>" required></td>
+                </tr>
+                <tr>
+                    <td>Fecha de nacimiento</td>
+                    <td><input type="date" name="birthdateP" id="birthdateP" value="<%= datos[0].birthdate %>" required></td>
+                </tr>
+                <tr>
+                    <td>G&eacute;nero</td>
+                    <td style="font-size: medium;">
+                        
+                        <label>
+                            <input type="radio" name="gender" value="Masculino" checked>
+                            Masculino
+                        </label>
+                    
+                        <label>
+                            <input type="radio" name="gender" value="Femenino">
+                            Femenino
+                        </label>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>Estado:</td>
+                    <td>
+                        <select name="stateP">
+                            <option value="Aguascalientes">Aguascalientes</option>
+                            <option value="Baja California">Baja California</option>
+                            <option value="Baja California Sur">Baja California Sur</option>
+                            <option value="Campeche">Campeche</option>
+                            <option value="Chiapas">Chiapas</option>
+                            <option value="Chihuahua">Chihuahua</option>
+                            <option value="Coahuila">Coahuila</option>
+                            <option value="Colima">Colima</option>
+                            <option value="Durango">Durango</option>
+                            <option value="Estado de México">Estado de México</option>
+                            <option value="Guanajuato">Guanajuato</option>
+                            <option value="Guerrero">Guerrero</option>
+                            <option value="Hidalgo">Hidalgo</option>
+                            <option value="Jalisco">Jalisco</option>
+                            <option value="Michoacán">Michoacán</option>
+                            <option value="Morelos">Morelos</option>
+                            <option value="Nayarit">Nayarit</option>
+                            <option value="Nuevo León">Nuevo León</option>
+                            <option value="Oaxaca">Oaxaca</option>
+                            <option value="Puebla">Puebla</option>
+                            <option value="Querétaro">Querétaro</option>
+                            <option value="Quintana Roo">Quintana Roo</option>
+                            <option value="San Luis Potosí">San Luis Potosí</option>
+                            <option value="Sinaloa">Sinaloa</option>
+                            <option value="Sonora">Sonora</option>
+                            <option value="Tabasco">Tabasco</option>
+                            <option value="Tamaulipas">Tamaulipas</option>
+                            <option value="Tlaxcala">Tlaxcala</option>
+                            <option value="Veracruz">Veracruz</option>
+                            <option value="Yucatán">Yucatán</option>
+                            <option value="Zacatecas">Zacatecas</option>
+                            <option value="Ciudad de México">Ciudad de México</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ciudad</td>
+                    <td><input type="text" name="cityP" id="cityP" placeholder="C&oacute;rdoba" value="<%= datos[0].city %>" required></td>
+                </tr>
+            </table>
+            <br>
+            <input type="hidden" name="idP" id="idP" value="<%= datos[0].id %>">
+            <button type="submit" class="button-G">Actualizar</button>
+        </form>
+        <a href="/inicio" style="text-decoration: none;">
+            <button style="margin-top: 10px;" class="button-GO">Cancelar</button>
+        </a>
+    </div>
+    </div>
+    <%- include('footer') %>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <% if(typeof alert != "undefined") { %>
+        <script>
+            Swal.fire({
+            title: '<%= alertTitle %>',
+            text: '<%= alertMessage %>',
+            icon: '<%= alertIcon %>',
+            showConfirmButton: <%= showConfirmButton %>,
+            timer: <%= time %>
+            }).then(()=>{
+                window.location='/<%= ruta%>'
+            })
+        </script>
+    <% } %>
+
+</body>
+</html>

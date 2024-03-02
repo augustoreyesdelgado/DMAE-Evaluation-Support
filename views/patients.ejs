@@ -115,7 +115,11 @@
                         <td> <button style="margin-top: 2px; " class="button-GW">Filtrar</button></td>
                     </tr>
                     <tr>
-                        <td> <button style="margin-top: 2px;" class="button-G">Editar</button></td>
+                        <td><form action="/updatepatients" id="formulario-e" method="post">
+                            <input type="hidden" name="idP" id="idP">
+                            <button style="margin-top: 2px;" class="button-G">Editar</button>
+                        </form>
+                    </td>
                     </tr>
                     <tr>
                         <td>
@@ -158,7 +162,7 @@
                           <td style="text-align: center;"><%= paciente.state %></td>
                           <td style="text-align: center;"><%= paciente.city %></td>
                           <td>
-                            <input type="radio" name="idP" value="<%= paciente.id %>" id="idP">
+                            <input type="radio" name="idP" value="<%= paciente.id %>" id="idP" required>
                           </td>
                         </tr>
                       <% }); %>

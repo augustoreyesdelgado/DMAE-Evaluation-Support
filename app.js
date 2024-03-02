@@ -144,7 +144,7 @@ app.get('/patients', (req, res)=>{
             });
     }
 })
-
+//ruta actualizar usuario
 app.get('/updateuser', async (req, res)=>{
     const usuario = await coneccion.usuario(req.session.idD);
     if(req.session.loggedin){
@@ -167,7 +167,29 @@ app.get('/updateuser', async (req, res)=>{
             });
     }
 })
-
+//ruta actualizar paciente
+app.post('/updatepatients', async (req, res)=>{
+    const paciente = await coneccion.paciente(req.body.idP);
+    if(req.session.loggedin){
+        res.render('updatepatients',{
+            login: true,
+            name: req.session.name,
+            id: req.session.idD,
+            datos: paciente,
+            listapacientes : req.session.pacientes
+        });
+    }else{
+        res.render('login',{
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "Debe Iniciar Sesión",
+            alertIcon: 'error',
+            showConfirmButton: false,
+            time: 2000,
+            ruta: ''
+            });
+    }
+})
 //Actualizar usuario
 app.post('/updateuserd', async (req, res)=>{
     const dan = license((await responseAPI(req.body.cedula)).items[0]);
@@ -184,7 +206,6 @@ app.post('/updateuserd', async (req, res)=>{
     city: req.body.city || "Córdoba",
     type: '0'
     }
-    console.log(req.session.idD);
     coneccion.updateu(datos, req.session.idD).then(result => {
         res.render('inicio', {
             login: true,
@@ -221,6 +242,54 @@ app.post('/updateuserd', async (req, res)=>{
         ruta: 'inicio'
     });
 }
+})
+
+//Actualizar paciente
+app.post('/updatepatientsd', async (req, res)=>{
+        const datos={
+        name : req.body.nameP,
+        flastname : req.body.flastnameP,
+        slastname : req.body.slastnameP,
+        birthdate: req.body.birthdateP || '2000/01/01',
+        gender : req.body.gender,
+        state: req.body.stateP || "Veracruz", 
+        city: req.body.cityP || "Córdoba",
+        type: '1',
+        idD: req.session.idD
+        }
+    
+        const results = await coneccion.updatep(datos, req.body.idP);
+    
+        if(results){
+            req.session.pacientes = await coneccion.pacientes(req.session.idD);
+            res.render('inicio', {
+            login: true,
+            name: req.session.name,
+            id: req.session.idD,
+            listapacientes: req.session.pacientes,
+            alert: true,
+            alertTitle: "Actualización",
+            alertMessage: "¡Actualización Exitosa!",
+            alertIcon: 'success',
+            showConfirmButton: false,
+            time: 1500,
+            ruta: 'inicio'
+            });
+        }else{
+            res.render('inicio',{
+                login: true,
+                name: req.session.name,
+                id: req.session.idD,
+                listapacientes: req.session.pacientes,    
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "Algo ha salido mal, intentelo de nuevo por favor",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                time: 1500,
+                ruta: 'inicio'
+                });
+        }
 })
 
 //logout
@@ -355,7 +424,8 @@ app.post('/results', upload.single('image'), async (req, res) => {
         console.error("Error:", error);
         res.render('inicio', { login: true, name: req.session.name, result: { error: "Error inesperado" } });
     }
-});
+})
+
 const fechaActual = new Date();
 //Registro de reporte
 app.post('/registroreporte', async (req, res)=>{
@@ -443,7 +513,7 @@ app.post('/eliminarreporte', async (req, res)=>{
     }
 })
 
-//Eliminar reporte
+//Eliminar pacientes
 app.post('/eliminarpacientes', async (req, res)=>{
     console.log(req.body.idP);
     const results = await coneccion.eliminarp(req.body.idP);
@@ -481,16 +551,6 @@ app.post('/eliminarpacientes', async (req, res)=>{
             });
     }
 })
-
-/*const data = {
-        user : req.body.user,
-        name : req.body.name,
-        flastname : req.body.flastname,
-        slastname : req.body.slastname,
-        cedula : req.body.cedula,
-        passwordHash : await bcryptsjs.hash(pass, 8)
-    }
-    coneccion.insertar(data);*/
 
 //Verifica cedula
 const responseAPI = async (license) => {

@@ -66,6 +66,11 @@ async function updateu(data, id){
     return await actualizar('datos_generales', {name: data.name, flastname: data.flastname, slastname: data.slastname, birthdate: data.birthdate, state: data.state, city: data.city, type: data.type}, id);
 }
 
+async function updatep(data, id){ 
+    await actualizar('pacientes', {gender: data.gender}, id);
+    return await actualizar('datos_generales', {name: data.name, flastname: data.flastname, slastname: data.slastname, birthdate: data.birthdate, state: data.state, city: data.city, type: data.type}, id);
+}
+
 function actualizar(tabla, data, id) {
     return new Promise((resolve, reject) => {
         const pool = new Pool(dbconfig);
@@ -125,6 +130,19 @@ function pacientes(idd){
     });
 }
 
+function paciente(id){
+    return new Promise((resolve, reject) => {
+        const pool = new Pool(dbconfig); // Crear una nueva pool para cada consulta
+        pool.query(`SELECT pa.id, pa.gender, ge.name, ge.flastname, ge.slastname, ge.birthdate, ge.state, ge.city 
+        FROM pacientes as pa 
+        INNER JOIN datos_generales as ge ON ge.id = pa.id 
+        WHERE pa.id = '${id}';
+        `, (error, result) => {
+            return error ? reject(error) : resolve(result.rows);
+        });
+    });
+}
+
 function reportes(idd){
     return new Promise((resolve, reject) => {
         const pool = new Pool(dbconfig); // Crear una nueva pool para cada consulta
@@ -168,6 +186,8 @@ module.exports = {
     agregarP,
     query,
     pacientes,
+    paciente,
+    updatep,
     reportes,
     eliminar,
     eliminarp,
