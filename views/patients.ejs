@@ -115,16 +115,16 @@
                         <td> <button style="margin-top: 2px; " class="button-GW">Filtrar</button></td>
                     </tr>
                     <tr>
-                        <td><form action="/updatepatients" id="formulario-e" method="post">
-                            <input type="hidden" name="idP" id="idP">
+                        <td><form action="/updatepatients" id="formularioeditar" method="post">
+                            <input type="hidden" name="idP1" id="idP1">
                             <button style="margin-top: 2px;" class="button-G">Editar</button>
                         </form>
                     </td>
                     </tr>
                     <tr>
                         <td>
-                            <form action="/eliminarpacientes" id="formulario-e" method="post">
-                                <input type="hidden" name="idP" id="idP">
+                            <form action="/eliminarpacientes" id="formularioeliminar" method="post">
+                                <input type="hidden" name="idP2" id="idP2">
                                 <button style="margin-top: 2px;" class="button-GR">Eliminar</button>
                             </form>
                         </td>
@@ -187,10 +187,42 @@
                 // Obtener el valor del radio button seleccionado
                 const valorSeleccionado = this.value;
                 // Asignar el valor al campo oculto del formulario
-                document.getElementById('idP').value = valorSeleccionado;
+                document.getElementById('idP1').value = valorSeleccionado;
+                document.getElementById('idP2').value = valorSeleccionado;
             });
         });
         </script>
+
+<script>
+    // Función para verificar si al menos un radio button está seleccionado
+    function validarSeleccionRadio(formularioId) {
+      var radios = document.querySelectorAll('input[type="radio"][id="idP"]');
+      var radioSeleccionado = false;
+  
+      radios.forEach(function(radio) {
+        if (radio.checked) {
+          radioSeleccionado = true;
+        }
+      });
+  
+      if (!radioSeleccionado) {
+        alert('Por favor, seleccione un paciente.');
+        event.preventDefault();
+        return false; // Evitar el envío del formulario si no se seleccionó ningún radio button
+      }
+  
+      return true; // Permitir el envío del formulario si al menos un radio button está seleccionado
+    }
+  
+    // Asignar el evento submit a los formularios para que se ejecute la función de validación antes del envío
+    document.getElementById('formularioeditar').addEventListener('submit', function(event) {
+      return validarSeleccionRadio('formulario-e');
+    });
+    document.getElementById('formularioeliminar').addEventListener('submit', function(event) {
+      return validarSeleccionRadio('formulario-e');
+    });
+  </script>
+  
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     

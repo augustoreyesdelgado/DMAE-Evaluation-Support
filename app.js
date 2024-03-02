@@ -169,7 +169,7 @@ app.get('/updateuser', async (req, res)=>{
 })
 //ruta actualizar paciente
 app.post('/updatepatients', async (req, res)=>{
-    const paciente = await coneccion.paciente(req.body.idP);
+    const paciente = await coneccion.paciente(req.body.idP1);
     if(req.session.loggedin){
         res.render('updatepatients',{
             login: true,
@@ -476,8 +476,8 @@ app.post('/registroreporte', async (req, res)=>{
 
 //Eliminar reporte
 app.post('/eliminarreporte', async (req, res)=>{
-    console.log(req.body.idP);
-    const results = await coneccion.eliminar(req.body.idP);
+    console.log(req.body.idP2);
+    const results = await coneccion.eliminar(req.body.idP2);
 
     if(results){
         req.session.pacientes = await coneccion.pacientes(req.session.idD);
@@ -515,8 +515,9 @@ app.post('/eliminarreporte', async (req, res)=>{
 
 //Eliminar pacientes
 app.post('/eliminarpacientes', async (req, res)=>{
-    console.log(req.body.idP);
-    const results = await coneccion.eliminarp(req.body.idP);
+    console.log('hola');
+    console.log(req.body.idP2);
+    const results = await coneccion.eliminarp(req.body.idP2);
 
     if(results){
         req.session.pacientes = await coneccion.pacientes(req.session.idD);
