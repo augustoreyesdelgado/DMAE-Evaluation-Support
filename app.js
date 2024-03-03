@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const multer = require('multer');
+const fs = require('fs');
 //captura de datos para el formulario
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -400,6 +401,7 @@ app.post('/results', upload.single('image'), async (req, res) => {
         }
 
         const data = req.file.buffer; // Obtén el contenido del archivo directamente desde el buffer
+        req.session.data=data;
 
         const response = await fetch(
             "https://api-inference.huggingface.co/models/Augusto777/vit-base-patch16-224-dmae-va-U",
@@ -427,14 +429,35 @@ app.post('/results', upload.single('image'), async (req, res) => {
 })
 
 const fechaActual = new Date();
+const dia = fechaActual.getDate();
+const mes = fechaActual.getMonth() + 1;
+const año = fechaActual.getFullYear();
+const horas = fechaActual.getHours();
+const minutos = fechaActual.getMinutes();
+const segundos = fechaActual.getSeconds();
+const fechaHoraString = `${año}-${mes}-${dia}-${horas}-${minutos}-${segundos}`;
 //Registro de reporte
 app.post('/registroreporte', async (req, res)=>{
+
+    console.log(req.session.data)
+    const imageBuffer = Buffer.from(req.session.data.data);
+
+    const rutaImagen = 'storage/'+req.body.idpaciente+'-imagen-'+fechaHoraString+'.png';
+
+    fs.writeFile(rutaImagen, imageBuffer, (err) => {
+      if (err) {
+        console.error('Error al guardar la imagen:', err);
+        return;
+      }
+      console.log('La imagen se ha guardado correctamente en:', rutaImagen);
+    });
+
     const datos={
     id_p : req.body.idpaciente,
     side : req.body.side || 'derecho',
     phase : req.body.phase || 'avanzada',
     acuracy: req.body.acuracy || '95.5',
-    image : req.body.image || 'abc/abc.jpg',
+    image: rutaImagen || 'abc/abc.png',
     analys_date: fechaActual
     }
 

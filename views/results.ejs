@@ -114,7 +114,6 @@
             <input type="hidden" name="idpaciente" id="idpaciente" value="<%= id_p %>">
             <input type="hidden" name="phase" id="phase" value="<%= phase %>">
             <input type="hidden" name="acuracy" id="acuracy" value="<%= acuracy %>">
-            <input type="file" name="image" accept="image/*" id="imageInput" style="display: none;">
             <input type="hidden" name="side" id="side" value="<%= side %>">
             <button type="submit" class="button-M">Guardar Reporte</button>
         </form>
@@ -136,6 +135,31 @@
 
     </div>
 
+    <script>
+        function setImageFile() {
+        console.log('setImageFile() se ha llamado');
+            try {
+                var imageSrc = document.querySelector('img').src;
+                var base64Content = imageSrc.split(';base64,')[1];
+                var blob = atob(base64Content);
+                var blobArray = [];
+                for(var i = 0; i < blob.length; i++) {
+                    blobArray.push(blob.charCodeAt(i));
+                }
+                var blobObject = new Blob([new Uint8Array(blobArray)], { type: 'image/png' });
+                var file = new File([blobObject], 'image.png', { type: 'image/png' });
+                document.querySelector('input[type=file]').files = [file];
+            } catch (error) {
+                console.error('Error al decodificar la cadena base64:', error);
+            }
+        }
+    
+        // Llama a setImageFile() después de que se haya cargado completamente la página
+        window.addEventListener('load', function() {
+            setImageFile();
+        });
+    </script>
+    
     <%- include('footer') %>
     <% } %>
 </body>
