@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const multer = require('multer');
 const fs = require('fs');
+const moment = require('moment');
 //captura de datos para el formulario
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -11,6 +12,8 @@ dotenv.config({path:'.env/.env'})
 //directorio publico
 app.use('/resources', express.static('public'));
 app.use('/resources', express.static(__dirname + 'public'));
+app.use('/storage', express.static('storage'));
+app.use('/storage', express.static(__dirname + 'storage'));
 //motor de plantillas
 app.set('view engine', 'ejs');
 //bcryptsjs
@@ -61,7 +64,7 @@ app.post('/auth', async (req, res)=>{
             });
         }else{
             req.session.loggedin = true;
-            req.session.name = results[0].name;
+            req.session.name = results[0].name+" "+results[0].flastname+" "+results[0].slastname;
             req.session.idD = results[0].id;
             //carga pacientes
             req.session.pacientes = await coneccion.pacientes(req.session.idD);
@@ -178,6 +181,51 @@ app.post('/updatepatients', async (req, res)=>{
             id: req.session.idD,
             datos: paciente,
             listapacientes : req.session.pacientes
+        });
+    }else{
+        res.render('login',{
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "Debe Iniciar Sesión",
+            alertIcon: 'error',
+            showConfirmButton: false,
+            time: 2000,
+            ruta: ''
+            });
+    }
+})
+
+function fecha(fecha, n){
+    const analys_date = new Date(fecha);
+    const year = analys_date.getFullYear();
+    const month = ('0' + (analys_date.getMonth() + 1)).slice(-2); 
+    const day = ('0' + analys_date.getDate()).slice(-2);
+    const formattedBirthdate = `${year}-${month}-${day}`;
+    if(n=='fecha'){
+    return formattedBirthdate;
+    }else if(n=='edad'){
+    const age = moment().diff(formattedBirthdate, 'years');
+    console.log(age)
+    return age;
+    }
+}
+
+//ruta imprimir reporte
+app.post('/printreport', async (req, res)=>{
+    const reporte = await coneccion.reporte(req.body.idP1, req.session.idD);
+    console.log(reporte[0].name);
+    
+    a_date = fecha(reporte[0].analys_date,'fecha');
+    edad = fecha(reporte[0].birthdate,'edad');
+
+    if(req.session.loggedin){
+        res.render('printreport',{
+            login: true,
+            name: req.session.name,
+            id: req.session.idD,
+            datos: reporte[0],
+            a_date,
+            edad
         });
     }else{
         res.render('login',{

@@ -157,6 +157,20 @@ function reportes(idd){
     });
 }
 
+function reporte(id,idd){
+    return new Promise((resolve, reject) => {
+        const pool = new Pool(dbconfig); // Crear una nueva pool para cada consulta
+        pool.query(`SELECT r.id, r.acuracy, r.image, r.side, dg.name, dg.flastname, dg.slastname, pa.gender, dg.birthdate, r.analys_date, r.phase
+        FROM reportes r
+        JOIN pacientes pa ON r.id_p = pa.id
+        JOIN datos_generales dg ON pa.id = dg.id
+         WHERE r.id='${id}' and pa.idd = '${idd}';
+        `, (error, result) => {
+            return error ? reject(error) : resolve(result.rows);
+        });
+    });
+}
+
 function eliminar(id){
     return new Promise((resolve, reject) => {
         const pool = new Pool(dbconfig); // Crear una nueva pool para cada consulta
@@ -193,5 +207,6 @@ module.exports = {
     eliminarp,
     usuario,
     updateu,
+    reporte,
     insert
 }
