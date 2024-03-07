@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DMAE Evaluation Support</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.js"></script>
     <style>
 
      table {
@@ -42,18 +43,12 @@
             font-size: large;
         }
         .table-container {
-        max-height: 800px; /* Altura máxima para la tabla */
         overflow-y: auto; /* Añade scroll vertical si es necesario */
         }
 
         .pagination {
         margin-top: 10px;
         }
-        @media print {
-        .no-imprimir {
-            display: none !important;
-        }
-    }
     </style>
 </head>
 <body>
@@ -72,12 +67,12 @@
 
     <div class="contenedor">
     
-    <div class="section-90">
-        <h1>Historial de An&aacute;lisis</h1>
-        <button class="button-GO" onclick="guardarTablaComoPDF()">Imprimir Tabla</button>
-        <div class="section-90i">
+    <div class="section-90" style="width: 50%; margin-left: 25%;">
+        <h1>Reporte</h1>
+        <button class="button-GO" id="pdfout">Imprimir Reporte</button>
+        <div id="maintable" class="section-90i">
             <div class="table-container">
-                <table id="reporte" style="width: 100%; margin-top: 0px; border-color:  rgb(24, 24, 24);" border="2">
+                <table class="reporte" style="width: 100%; margin-top: 0px; border-color:  rgb(24, 24, 24);" border="2">
                     <thead style="background-color: rgb(255, 255, 255);">
                       <tr style="background-color: rgb(155, 155, 155);">
                         <th colspan="5">Reporte de An&aacute;lisis de Im&aacute;gen de Fondo de Ojo</th>
@@ -133,24 +128,44 @@
     
     <%- include('footer') %>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
-    <script>
-    function guardarTablaComoPDF() {
-        // Crear un nuevo documento PDF
-        var doc = new jsPDF();
-    
-        // Obtener el contenido HTML de la tabla
-        var tabla = document.getElementById('reporte');
-    
-        // Generar el PDF
-        doc.autoTable({
-            html: tabla,
-            startY: 10
-        });
-    
-        // Descargar el PDF
-        doc.save('tabla.pdf');
-    }
+    <script type="module">
+    window.jsPDF = window.jspdf.jsPDF;
+    var maintable = document.getElementById('maintable'),
+            pdfout = document.getElementById('pdfout');
+
+        pdfout.onclick = function(){
+            var doc = new jsPDF('p', 'pt', 'letter');
+            var margin = 25;
+            var scale = (doc.internal.pageSize.width) / document.body.clientWidth;
+            var scale_mobile = (doc.internal.pageSize.width) / document.body.getBoundingClientRect();
+
+            // checking
+            if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+                // mobile
+                doc.html(maintable, {
+                    x: margin,
+                    y: margin,
+                    html2canvas:{
+                        scale: scale_mobile,
+                    },
+                    callback: function(doc){
+                        doc.output('dataurlnewwindow', {filename: 'reporte.pdf'});
+                    }
+                });
+            } else{
+                // PC
+                doc.html(maintable, {
+                    x: margin,
+                    y: margin,
+                    html2canvas:{
+                        scale: scale*2,
+                    },
+                    callback: function(doc){
+                        doc.output('dataurlnewwindow', {filename: 'reporte.pdf'});
+                    }
+                });
+            }
+        };
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -91,6 +91,18 @@ body {
     /*padding-top: 20vh;*/
 }
 
+.section-90ix {
+    width: 44%;
+    /*background-color: rgba(135, 209, 86, 0.546); /* Color de fondo para visualización */
+    text-align: center; /* Alineación del texto al centro dentro del div */
+    padding: 20px; /* Espaciado interno para mejor visualización */
+    /*border-radius: 12px; /* Radio de las esquinas redondeadas */
+    /*border: 2px solid  rgba(24, 24, 24, 0.897);  /* Borde oscuro */
+    margin-right: 5%;
+    margin-left: 5%;
+    /*padding-top: 20vh;*/
+}
+
 .grid-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* Define 4 columnas iguales */
