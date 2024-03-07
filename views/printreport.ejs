@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DMAE Evaluation Support</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
     <style>
 
      table {
@@ -48,6 +49,11 @@
         .pagination {
         margin-top: 10px;
         }
+        @media print {
+        .no-imprimir {
+            display: none !important;
+        }
+    }
     </style>
 </head>
 <body>
@@ -68,102 +74,28 @@
     
     <div class="section-90">
         <h1>Historial de An&aacute;lisis</h1>
-
-        <div class="grid-container">
-            <div class="grid-item">
-                <table>
-                    <tr>
-                        <td>Nombre</td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" name="nameP" id="nameP" placeholder="Jos&eacute; Hern&aacute;ndez"></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="grid-item">
-                <table>
-                    <tr>
-                        <td>Fecha (Registro)</td>
-                    </tr>
-                    <tr>
-                        <td><input type="date" name="fecha" id="fecha" placeholder="Jos&eacute;"></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="grid-item">
-                <table>
-                    <tr>
-                        <td style="font-size: medium;">
-                                <input type="radio" name="afeccion" value="" checked>
-                                Sin Afecci&oacute;n
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="font-size: medium;">
-                                <input type="radio" name="afeccion" value="" >
-                                Afecci&oacute;n Leve
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="font-size: medium;">
-                                <input type="radio" name="afeccion" value="" >
-                                Afecci&oacute;n Moderada
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="font-size: medium;">
-                                <input type="radio" name="afeccion" value="" >
-                                Afecci&oacute;n Avanzada
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div class="grid-item">
-                <table style="float: right;">
-                    <tr>
-                        <td> <button style="margin-top: 2px; " class="button-GW">Filtrar</button></td>
-                    </tr>
-                    <tr>
-                        <td> 
-                            <form action="/printreport" id="formularioimprimir" method="post">
-                                <input type="hidden" name="idP1" id="idP1">
-                                <button style="margin-top: 2px;" class="button-G">Imprimir</button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> 
-                            <form action="/eliminarreporte" id="formularioeliminar" method="post">
-                                <input type="hidden" name="idP2" id="idP2">
-                                <button style="margin-top: 2px;" class="button-GR">Eliminar</button>
-                            </form>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-          </div>
-
+        <button class="button-GO" onclick="guardarTablaComoPDF()">Imprimir Tabla</button>
         <div class="section-90i">
             <div class="table-container">
-                <table id="my-table" style="width: 100%; margin-top: 0px; border-color:  rgb(24, 24, 24);" border="2">
+                <table id="reporte" style="width: 100%; margin-top: 0px; border-color:  rgb(24, 24, 24);" border="2">
                     <thead style="background-color: rgb(255, 255, 255);">
                       <tr style="background-color: rgb(155, 155, 155);">
                         <th colspan="5">Reporte de An&aacute;lisis de Im&aacute;gen de Fondo de Ojo</th>
                       </tr>
                       <tr>
-                        <td style="text-align: center;">Doctor:</td><td style="text-align: left;" colspan="4"><%= name %></td>
+                        <td style="text-align: center;font-weight: bold;"">Doctor:</td><td style="text-align: left;" colspan="4"><%= name %></td>
                       </tr>
                       <tr>
-                        <td style="text-align: center;">Paciente:</td><td style="text-align: left;" colspan="2"><%= datos.name %> <%= datos.flastname %> <%= datos.slastname %></td>
-                        <td style="text-align: center;">Edad:</td><td style="text-align: left;" colspan="2"><%= edad %> años</td>
+                        <td style="text-align: center;font-weight: bold;"">Paciente:</td><td style="text-align: left;" colspan="2"><%= datos.name %> <%= datos.flastname %> <%= datos.slastname %></td>
+                        <td style="text-align: center;font-weight: bold;"">Edad:</td><td style="text-align: left;" colspan="2"><%= edad %> años</td>
                       </tr>
                       <tr>
-                        <td style="text-align: center;">Genero:</td><td style="text-align: left;" colspan="2"><%= datos.gender %></td>
-                        <td style="text-align: center;">Ojo analizado:</td><td style="text-align: left;" colspan="2"><%= datos.side %></td>
+                        <td style="text-align: center;font-weight: bold;"">Genero:</td><td style="text-align: left;" colspan="2"><%= datos.gender %></td>
+                        <td style="text-align: center;font-weight: bold;"">Ojo analizado:</td><td style="text-align: left;" colspan="2"><%= datos.side %></td>
                       </tr>
                       <tr>
-                        <td style="text-align: center;">Resultado:</td><td style="text-align: left;" colspan="2"><%= datos.acuracy %>% de probabilidad de degeneraci&oacute;n macular <%= datos.phase %></td>
-                        <td style="text-align: center;">Fecha de an&aacute;lisis:</td><td style="text-align: left;"><%= a_date %></td>
+                        <td style="text-align: center;font-weight: bold;"">Resultado:</td><td style="text-align: left;" colspan="2"><%= datos.acuracy %>% de probabilidad de degeneraci&oacute;n macular <%= datos.phase %></td>
+                        <td style="text-align: center;font-weight: bold;"">Fecha de an&aacute;lisis:</td><td style="text-align: left;"><%= a_date %></td>
                       </tr>
                     </thead>
                     <thead style="background-color: rgb(255, 255, 255);">
@@ -173,19 +105,23 @@
                       </thead>
                     <tbody id="table-body" style="background-color: white;">
                         <tr>
-                          <td colspan="5" style="text-align: center;"><img src="/<%= datos.image %>" style="max-width: 100%;"></td>
+                            <td colspan="3" style="text-align: center; font-weight: bold; color: #00e5ff49; vertical-align: middle;"><img src="/<%= datos.image %>" style="width: 100%;"></td>
+                            <td colspan="2" style="text-align: center; font-size: 40px; font-weight: bold; color: #e1fcff; vertical-align: middle;"><p>Puede usar este &aacute;rea para observaciones</p></td>
                         </tr>
                         <tr>
-                            <td colspan="5" style="background-color: rgb(235, 235, 235);">Notas:</td>
+                            <td colspan="5" style="background-color: rgb(235, 235, 235);font-weight: bold;"">Notas:</td>
                         </tr>
                         <tr>
-                            <td colspan="5" style="background-color: rgb(235, 235, 235);"><p></p></td>
+                            <td colspan="5" style="background-color: rgb(235, 235, 235); color: rgb(155, 155, 155);">></td>
                         </tr>
                         <tr>
-                            <td colspan="5" style="background-color: rgb(235, 235, 235);"><p></p></td>
+                            <td colspan="5" style="background-color: rgb(235, 235, 235); color: rgb(155, 155, 155);">></td>
                         </tr>
                         <tr>
-                            <td colspan="5" style="background-color: rgb(235, 235, 235);"><p></p></td>
+                            <td colspan="5" style="background-color: rgb(235, 235, 235); color: rgb(155, 155, 155);">></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="margin-top: 20px;"><p style="float: left; color: #b3b3b3; font-weight: bold;">DeepEye</p><p style="float: right;">Fecha de impresi&oacute;n del reporte: <%= fechaString %></p></td>
                         </tr>
                     </tbody>
                   </table>
@@ -197,51 +133,25 @@
     
     <%- include('footer') %>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
     <script>
-    // Obtener referencia a los radio buttons
-    const radioButtons = document.querySelectorAll('input[type="radio"][id="idP"]');
+    function guardarTablaComoPDF() {
+        // Crear un nuevo documento PDF
+        var doc = new jsPDF();
     
-    // Agregar un event listener a cada radio button
-    radioButtons.forEach(radioButton => {
-        radioButton.addEventListener('change', function() {
-            // Obtener el valor del radio button seleccionado
-            const valorSeleccionado = this.value;
-            // Asignar el valor al campo oculto del formulario
-            document.getElementById('idP1').value = valorSeleccionado;
-            document.getElementById('idP2').value = valorSeleccionado;
-            });
+        // Obtener el contenido HTML de la tabla
+        var tabla = document.getElementById('reporte');
+    
+        // Generar el PDF
+        doc.autoTable({
+            html: tabla,
+            startY: 10
         });
-        </script>
-
-<script>
-    // Función para verificar si al menos un radio button está seleccionado
-    function validarSeleccionRadio(formularioId) {
-      var radios = document.querySelectorAll('input[type="radio"][id="idP"]');
-      var radioSeleccionado = false;
-  
-      radios.forEach(function(radio) {
-        if (radio.checked) {
-          radioSeleccionado = true;
-        }
-      });
-  
-      if (!radioSeleccionado) {
-        alert('Por favor, seleccione un paciente.');
-        event.preventDefault();
-        return false; // Evitar el envío del formulario si no se seleccionó ningún radio button
-      }
-  
-      return true; // Permitir el envío del formulario si al menos un radio button está seleccionado
+    
+        // Descargar el PDF
+        doc.save('tabla.pdf');
     }
-  
-    // Asignar el evento submit a los formularios para que se ejecute la función de validación antes del envío
-    document.getElementById('formularioimprimir').addEventListener('submit', function(event) {
-      return validarSeleccionRadio('formulario-e');
-    });
-    document.getElementById('formularioeliminar').addEventListener('submit', function(event) {
-      return validarSeleccionRadio('formulario-e');
-    });
-  </script>
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     

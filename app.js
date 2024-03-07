@@ -217,6 +217,7 @@ app.post('/printreport', async (req, res)=>{
     
     a_date = fecha(reporte[0].analys_date,'fecha');
     edad = fecha(reporte[0].birthdate,'edad');
+    const fechaString = `${año}-${mes}-${dia}`;
 
     if(req.session.loggedin){
         res.render('printreport',{
@@ -225,7 +226,8 @@ app.post('/printreport', async (req, res)=>{
             id: req.session.idD,
             datos: reporte[0],
             a_date,
-            edad
+            edad,
+            fechaString
         });
     }else{
         res.render('login',{
