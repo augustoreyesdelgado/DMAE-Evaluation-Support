@@ -14,6 +14,8 @@ app.use('/resources', express.static('public'));
 app.use('/resources', express.static(__dirname + 'public'));
 app.use('/storage', express.static('storage'));
 app.use('/storage', express.static(__dirname + 'storage'));
+app.use('/dataprocessing', express.static('dataprocessing'));
+app.use('/dataprocessing', express.static(__dirname + 'dataprocessing'));
 //motor de plantillas
 app.set('view engine', 'ejs');
 //bcryptsjs
