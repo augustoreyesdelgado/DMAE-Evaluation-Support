@@ -212,6 +212,24 @@ function fecha(fecha, n){
     }
 }
 
+function fechaActual(){
+    const fechaActual = new Date();
+    const dia = fechaActual.getDate();
+    const mes = fechaActual.getMonth() + 1;
+    const año = fechaActual.getFullYear();
+    const horas = fechaActual.getHours();
+    const minutos = fechaActual.getMinutes();
+    const segundos = fechaActual.getSeconds();
+    const fechaHoraString = `${año}-${mes}-${dia}-${horas}-${minutos}-${segundos}`;
+    const fechaString = `${año}-${mes}-${dia}`;
+    const fechas={
+        fechaD:fechaActual,
+        fechaS:fechaHoraString,
+        fechaSm:fechaString
+    }
+    return fechas;
+}
+
 //ruta imprimir reporte
 app.post('/printreport', async (req, res)=>{
     const reporte = await coneccion.reporte(req.body.idP1, req.session.idD);
@@ -219,7 +237,7 @@ app.post('/printreport', async (req, res)=>{
     
     a_date = fecha(reporte[0].analys_date,'fecha');
     edad = fecha(reporte[0].birthdate,'edad');
-    const fechaString = `${año}-${mes}-${dia}`;
+    const fechaString = fechaActual().fechaSm;
 
     if(req.session.loggedin){
         res.render('printreport',{
@@ -480,21 +498,13 @@ app.post('/results', upload.single('image'), async (req, res) => {
     }
 })
 
-const fechaActual = new Date();
-const dia = fechaActual.getDate();
-const mes = fechaActual.getMonth() + 1;
-const año = fechaActual.getFullYear();
-const horas = fechaActual.getHours();
-const minutos = fechaActual.getMinutes();
-const segundos = fechaActual.getSeconds();
-const fechaHoraString = `${año}-${mes}-${dia}-${horas}-${minutos}-${segundos}`;
 //Registro de reporte
 app.post('/registroreporte', async (req, res)=>{
 
     console.log(req.session.data)
     const imageBuffer = Buffer.from(req.session.data.data);
-
-    const rutaImagen = 'storage/'+req.body.idpaciente+'-imagen-'+fechaHoraString+'.png';
+    const fechaactual = fechaActual(); 
+    const rutaImagen = 'storage/'+req.body.idpaciente+'-imagen-'+fechaactual.fechaS+'.png';
 
     fs.writeFile(rutaImagen, imageBuffer, (err) => {
       if (err) {
@@ -510,7 +520,7 @@ app.post('/registroreporte', async (req, res)=>{
     phase : req.body.phase || 'avanzada',
     acuracy: req.body.acuracy || '95.5',
     image: rutaImagen || 'abc/abc.png',
-    analys_date: fechaActual
+    analys_date: fechaactual.fechaD
     }
 
     const results = await coneccion.insert('reportes',datos);
