@@ -3,7 +3,7 @@ const cv = require('./opencv.js');
 
 async function procesarImagen(imagePath, fecha) {
   // Carga una imagen local con Jimp
-  console.log(imagePath);
+  
   const jimpSrc = await Jimp.read(imagePath);
 
   // Ajusta el brillo y el contraste de la imagen
@@ -25,7 +25,6 @@ async function procesarImagen(imagePath, fecha) {
   var n;
 
   dstJimp.getBuffer(Jimp.MIME_PNG, (err, buffer) => {
-    console.log(buffer);
     n = buffer;
   });
 

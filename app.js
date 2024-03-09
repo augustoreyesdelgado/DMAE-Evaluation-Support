@@ -29,8 +29,10 @@ app.use(session({
 }))
 //Invocar coneccion a base de datos
 const coneccion = require('./DB/db');
-//Invocar coneccion a base de datos
+//Invocar preprocesamiento
 const preproceso = require('./dataprocessing/preprocessing');
+//invocar conexion a huggingface
+const clasifica = require('./classification/classificationconection');
 // Configuración de Multer
 const storage = multer.memoryStorage(); // Almacena la imagen en memoria
 const upload = multer({ storage: storage });
@@ -476,15 +478,7 @@ app.post('/results', upload.single('image'), async (req, res) => {
         
         req.session.data=data;
 
-        console.log(data);
-        const response = await fetch(
-            "https://api-inference.huggingface.co/models/Augusto777/vit-base-patch16-224-dmae-va-U",
-            {
-                headers: { Authorization: "Bearer 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" },
-                method: "POST",
-                body: data,
-            }
-        );
+        const response = await clasifica.clasifica(data);
 
         const result = await response.json();
         
@@ -498,14 +492,16 @@ app.post('/results', upload.single('image'), async (req, res) => {
          });
     } catch (error) {
         console.error("Error:", error);
-        res.render('inicio', { login: true, name: req.session.name, result: { error: "Error inesperado" } });
+        res.render('inicio', { login: true, name: req.session.name,
+            id: req.session.idD,
+            listapacientes : req.session.pacientes,
+            listareportes: req.session.reportes,
+            result: { error: "Error inesperado" } });
     }
 })
-
 //Registro de reporte
 app.post('/registroreporte', async (req, res)=>{
 
-    console.log(req.session.data)
     const imageBuffer = Buffer.from(req.session.data.data);
     const fechaactual = fechaActual(); 
     const rutaImagen = 'storage/'+req.body.idpaciente+'-imagen-'+fechaactual.fechaS+'.png';
@@ -517,6 +513,7 @@ app.post('/registroreporte', async (req, res)=>{
       }
       console.log('La imagen se ha guardado correctamente en:', rutaImagen);
     });
+
 
     const datos={
     id_p : req.body.idpaciente,
