@@ -29,6 +29,8 @@ app.use(session({
 }))
 //Invocar coneccion a base de datos
 const coneccion = require('./DB/db');
+//Invocar coneccion a base de datos
+const preproceso = require('./dataprocessing/preprocessing');
 // Configuración de Multer
 const storage = multer.memoryStorage(); // Almacena la imagen en memoria
 const upload = multer({ storage: storage });
@@ -470,9 +472,11 @@ app.post('/results', upload.single('image'), async (req, res) => {
             return;
         }
 
-        const data = req.file.buffer; // Obtén el contenido del archivo directamente desde el buffer
+        const data = await preproceso.procesarImagen(req.file.buffer); // Obtén el contenido del archivo directamente desde el buffer
+        
         req.session.data=data;
 
+        console.log(data);
         const response = await fetch(
             "https://api-inference.huggingface.co/models/Augusto777/vit-base-patch16-224-dmae-va-U",
             {

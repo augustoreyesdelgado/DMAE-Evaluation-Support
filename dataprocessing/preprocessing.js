@@ -7,7 +7,7 @@ async function procesarImagen(imagePath, fecha) {
   const jimpSrc = await Jimp.read(imagePath);
 
   // Ajusta el brillo y el contraste de la imagen
-  jimpSrc.contrast(0.1); // Modifica el factor de contraste según sea necesario
+  jimpSrc.contrast(0.2); // Modifica el factor de contraste según sea necesario
   jimpSrc.brightness(0.05); // Modifica el factor de brillo según sea necesario
 
   // Cambia el tamaño de la imagen a 300x300 píxeles
@@ -20,11 +20,17 @@ async function procesarImagen(imagePath, fecha) {
 
   // Después de terminar con las operaciones de OpenCV, convierte el objeto `Mat` resultante a una imagen Jimp y guárdala
   const dstJimp = await jimpFromMat(src);
+  src.delete();
 
-  // Guarda la imagen en disco
-  await dstJimp.writeAsync(fecha+'output.png');
-  console.log(fecha+'output.png');
-  src.delete(); // Libera la memoria del objeto `Mat`
+  var n;
+
+  dstJimp.getBuffer(Jimp.MIME_PNG, (err, buffer) => {
+    console.log(buffer);
+    n = buffer;
+  });
+
+  return n;
+   // Libera la memoria del objeto `Mat`
 }
 
 async function jimpFromMat(mat) {
