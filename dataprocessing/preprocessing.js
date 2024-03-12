@@ -7,20 +7,27 @@ async function procesarImagen(imagePath, fecha) {
   const jimpSrc = await Jimp.read(imagePath);
 
   // Ajusta el brillo y el contraste de la imagen
-  jimpSrc.contrast(0.2); // Modifica el factor de contraste según sea necesario
-  jimpSrc.brightness(0.05); // Modifica el factor de brillo según sea necesario
+  //jimpSrc.contrast(0.2); // Modifica el factor de contraste según sea necesario
+  //jimpSrc.brightness(0.05); // Modifica el factor de brillo según sea necesario
 
   // Cambia el tamaño de la imagen a 300x300 píxeles
-  jimpSrc.resize(300, 300);
+  //jimpSrc.resize(300, 300);
 
   // Crea un objeto `cv.Mat` desde los datos de imagen de Jimp
   const src = cv.matFromImageData(jimpSrc.bitmap);
 
   // Ahora puedes continuar con tus operaciones de OpenCV en el objeto `src`
+  // Cambiar la resolución a 300x300
+  const resizedImage = changeResolution(src, 300, 300);
+
+  // Ajustar brillo y contraste
+  const adjustedImage = adjustBrightnessContrast(resizedImage, 15, 30);
 
   // Después de terminar con las operaciones de OpenCV, convierte el objeto `Mat` resultante a una imagen Jimp y guárdala
-  const dstJimp = await jimpFromMat(src);
+  const dstJimp = await jimpFromMat(adjustedImage);
   src.delete();
+  resizedImage.delete();
+  adjustedImage.delete();
 
   var n;
 
@@ -30,6 +37,22 @@ async function procesarImagen(imagePath, fecha) {
 
   return n;
    // Libera la memoria del objeto `Mat`
+}
+
+// Función para cambiar la resolución de la imagen
+function changeResolution(image, newWidth, newHeight) {
+  const dst = new cv.Mat();
+  cv.resize(image, dst, new cv.Size(newWidth, newHeight), 0, 0, cv.INTER_LINEAR);
+  return dst;
+}
+
+// Función para ajustar el brillo y el contraste de la imagen
+function adjustBrightnessContrast(image, brightnessPercent, contrastPercent) {
+  const brightness = brightnessPercent / 100 * 255;
+  const contrast = (contrastPercent / 100) + 1;
+  const dst = new cv.Mat();
+  image.convertTo(dst, -1, contrast, brightness);
+  return dst;
 }
 
 async function jimpFromMat(mat) {
