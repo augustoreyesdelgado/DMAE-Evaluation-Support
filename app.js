@@ -113,6 +113,7 @@ app.get('/inicio', (req, res)=>{
             });
     }
 })
+//ruta lista de reportes
 app.get('/records', (req, res)=>{
     if(req.session.loggedin){
         res.render('records',{
@@ -133,7 +134,7 @@ app.get('/records', (req, res)=>{
             });
     }
 })
-
+//ruta lista de pacientes
 app.get('/patients', (req, res)=>{
     if(req.session.loggedin){
         res.render('patients',{
@@ -141,6 +142,36 @@ app.get('/patients', (req, res)=>{
             name: req.session.name,
             id: req.session.idD,
             listapacientes : req.session.pacientes
+        });
+    }else{
+        res.render('login',{
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "Debe Iniciar Sesión",
+            alertIcon: 'error',
+            showConfirmButton: false,
+            time: 2000,
+            ruta: ''
+            });
+    }
+})
+//filtrado de pacientes
+app.post('/filter', async (req, res)=>{
+
+    data = {
+        nombre: req.body.nameP1 || '',
+        fecha: req.body.fecha || '',
+        genero: req.body.gender || ''
+    }
+    console.log(req.body.fecha);
+    console.log(req.body.nameP1);
+    const listafiltrada = await coneccion.patientsfiltered(req.session.idD,data);
+    if(req.session.loggedin){
+        res.render('patients',{
+            login: true,
+            name: req.session.name,
+            id: req.session.idD,
+            listapacientes : listafiltrada
         });
     }else{
         res.render('login',{

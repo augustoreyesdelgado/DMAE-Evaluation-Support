@@ -76,7 +76,8 @@
                         <td>Nombre</td>
                     </tr>
                     <tr>
-                        <td><input type="text" name="nameP" id="nameP" placeholder="Jos&eacute; Hern&aacute;ndez"></td>
+                        <form action="/filter" method="post">
+                        <td><input type="text" name="nameP1" id="nameP1" placeholder="Jos&eacute; Hern&aacute;ndez"></td>
                     </tr>
                 </table>
             </div>
@@ -97,13 +98,13 @@
                     </tr>
                     <tr>
                         <td style="font-size: medium;">
-                                <input type="radio" name="gender" value="" checked>
+                                <input type="radio" name="gender" id="gender" value="Masculino">
                                 Maculino
                         </td>
                     </tr>
                     <tr>
                         <td style="font-size: medium;">
-                                <input type="radio" name="gender" value="" >
+                                <input type="radio" name="gender" id="gender" value="Femenino">
                                 Femenino
                         </td>
                     </tr>
@@ -112,7 +113,9 @@
             <div class="grid-item">
                 <table style="float: right;">
                     <tr>
-                        <td> <button style="margin-top: 2px; " class="button-GW">Filtrar</button></td>
+                        <td>
+                            <button style="margin-top: 2px; " class="button-GW">Filtrar</button>
+                        </form>
                     </tr>
                     <tr>
                         <td><form action="/updatepatients" id="formularioeditar" method="post">
@@ -191,9 +194,25 @@
                 document.getElementById('idP2').value = valorSeleccionado;
             });
         });
-        </script>
+    </script>
 
-<script>
+    <script>
+        // Obtener referencia a los radio buttons
+        const radioButtonsG = document.querySelectorAll('input[type="radio"][id="gender"]');
+        
+        // Agregar un event listener a cada radio button
+        radioButtonsG.forEach(radioButtonG => {
+            radioButtonG.addEventListener('change', function() {
+                // Obtener el valor del radio button seleccionado
+                const valorSeleccionado = this.value;
+                // Asignar el valor al campo oculto del formulario
+                document.getElementById('generoP1').value = valorSeleccionado;
+                console.log(valorSeleccionado);
+            });
+        });
+    </script>
+
+    <script>
     // Función para verificar si al menos un radio button está seleccionado
     function validarSeleccionRadio(formularioId) {
       var radios = document.querySelectorAll('input[type="radio"][id="idP"]');
@@ -221,7 +240,7 @@
     document.getElementById('formularioeliminar').addEventListener('submit', function(event) {
       return validarSeleccionRadio('formulario-e');
     });
-  </script>
+    </script>
   
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

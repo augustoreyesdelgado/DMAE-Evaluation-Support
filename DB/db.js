@@ -130,6 +130,71 @@ function pacientes(idd){
     });
 }
 
+function patientsfiltered(idd, data){
+    return new Promise((resolve, reject) => {
+        const pool = new Pool(dbconfig); // Crear una nueva pool para cada consulta
+        var query;
+        if(data.fecha==''){
+        query = {
+            text : `SELECT 
+            pa.id, pa.gender, ge.name, ge.flastname, ge.slastname, ge.birthdate, ge.state, ge.city 
+        FROM 
+            pacientes AS pa 
+        INNER JOIN 
+            datos_generales AS ge ON ge.id = pa.id 
+        WHERE 
+            pa.idd = '${idd}' 
+        AND 
+            (
+                CASE 
+                    WHEN '${data.genero}' = '' THEN TRUE
+                    ELSE pa.gender = '${data.genero}'
+                END
+            )
+        AND 
+            (
+                CASE 
+                    WHEN '${data.nombre}' = '' THEN TRUE
+                    ELSE LOWER(ge.name || ' ' || ge.flastname || ' ' || ge.slastname) LIKE LOWER('%${data.nombre}%')
+                END
+            );`
+        }
+        }else{
+            query = {
+                text : `SELECT 
+                pa.id, pa.gender, ge.name, ge.flastname, ge.slastname, ge.birthdate, ge.state, ge.city 
+            FROM 
+                pacientes AS pa 
+            INNER JOIN 
+                datos_generales AS ge ON ge.id = pa.id 
+            WHERE 
+                pa.idd = '${idd}' 
+            AND 
+                (
+                    CASE 
+                        WHEN '${data.genero}' = '' THEN TRUE
+                        ELSE pa.gender = '${data.genero}'
+                    END
+                )
+            AND 
+                (
+                    CASE 
+                        WHEN '${data.nombre}' = '' THEN TRUE
+                        ELSE LOWER(ge.name || ' ' || ge.flastname || ' ' || ge.slastname) LIKE LOWER('%${data.nombre}%')
+                    END
+                )
+            AND 
+                (
+                    ge.birthdate = '${data.fecha}'
+                );`
+            }
+        }
+        pool.query(query, (error, result) => {
+            return error ? reject(error) : resolve(result.rows);
+        });
+    });
+}
+
 function paciente(id){
     return new Promise((resolve, reject) => {
         const pool = new Pool(dbconfig); // Crear una nueva pool para cada consulta
@@ -208,5 +273,6 @@ module.exports = {
     usuario,
     updateu,
     reporte,
+    patientsfiltered,
     insert
 }
