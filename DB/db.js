@@ -154,6 +154,20 @@ function patientsfiltered(idd, data){
         AND 
             (
                 CASE 
+                    WHEN '${data.ciudad}' = '' THEN TRUE
+                    ELSE ge.city = '${data.ciudad}'
+                END
+            )
+        AND 
+            (
+                CASE 
+                    WHEN '${data.estado}' = '' THEN TRUE
+                    ELSE ge.state = '${data.estado}'
+                END
+            )
+        AND 
+            (
+                CASE 
                     WHEN '${data.nombre}' = '' THEN TRUE
                     ELSE LOWER(ge.name || ' ' || ge.flastname || ' ' || ge.slastname) LIKE LOWER('%${data.nombre}%')
                 END
@@ -177,6 +191,20 @@ function patientsfiltered(idd, data){
                     END
                 )
             AND 
+                (
+                    CASE 
+                        WHEN '${data.ciudad}' = '' THEN TRUE
+                        ELSE ge.city = '${data.ciudad}'
+                    END
+                )
+            AND 
+                (
+                    CASE 
+                        WHEN '${data.estado}' = '' THEN TRUE
+                        ELSE ge.state = '${data.estado}'
+                    END
+                )
+            AND
                 (
                     CASE 
                         WHEN '${data.nombre}' = '' THEN TRUE

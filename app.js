@@ -190,7 +190,9 @@ app.post('/filter', async (req, res)=>{
     data = {
         nombre: req.body.nameP1 || '',
         fecha: req.body.fecha || '',
-        genero: req.body.gender || ''
+        genero: req.body.gender || '',
+        estado: req.body.stateP1 || '',
+        ciudad: req.body.cityP1 || ''
     }
     const listafiltrada = await coneccion.patientsfiltered(req.session.idD,data);
     if(req.session.loggedin){
@@ -258,7 +260,6 @@ app.post('/updatepatients', async (req, res)=>{
             });
     }
 })
-
 function fecha(fecha, n){
     const analys_date = new Date(fecha);
     const year = analys_date.getFullYear();
@@ -273,7 +274,6 @@ function fecha(fecha, n){
     return age;
     }
 }
-
 function fechaActual(){
     const fechaActual = new Date();
     const dia = fechaActual.getDate();
@@ -291,7 +291,6 @@ function fechaActual(){
     }
     return fechas;
 }
-
 //ruta imprimir reporte
 app.post('/printreport', async (req, res)=>{
     const reporte = await coneccion.reporte(req.body.idP1, req.session.idD);
