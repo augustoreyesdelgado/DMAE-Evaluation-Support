@@ -195,6 +195,65 @@ function patientsfiltered(idd, data){
     });
 }
 
+function reportsfiltered(idd, data){
+    return new Promise((resolve, reject) => {
+        const pool = new Pool(dbconfig); // Crear una nueva pool para cada consulta
+        var query;
+        if(data.fecha==''){
+        query = {
+            text : `SELECT r.id, r.acuracy, dg.name, dg.flastname, dg.slastname, r.analys_date, r.phase, pa.idd
+            FROM reportes r
+            JOIN pacientes pa ON r.id_p = pa.id
+            JOIN datos_generales dg ON pa.id = dg.id
+             WHERE pa.idd = '${idd}'
+        AND 
+            (
+                CASE 
+                    WHEN '${data.afeccion}' = '' THEN TRUE
+                    ELSE r.phase = '${data.afeccion}'
+                END
+            )
+        AND 
+            (
+                CASE 
+                    WHEN '${data.nombre}' = '' THEN TRUE
+                    ELSE LOWER(dg.name || ' ' || dg.flastname || ' ' || dg.slastname) LIKE LOWER('%${data.nombre}%')
+                END
+            );`
+        }
+        }else{
+            query = {
+                text : `SELECT r.id, r.acuracy, dg.name, dg.flastname, dg.slastname, r.analys_date, r.phase, pa.idd
+                FROM reportes r
+                JOIN pacientes pa ON r.id_p = pa.id
+                JOIN datos_generales dg ON pa.id = dg.id
+                 WHERE pa.idd = '${idd}'
+            AND 
+                (
+                    CASE 
+                        WHEN '${data.afeccion}' = '' THEN TRUE
+                        ELSE r.phase = '${data.afeccion}'
+                    END
+                )
+            AND 
+                (
+                    CASE 
+                        WHEN '${data.nombre}' = '' THEN TRUE
+                        ELSE LOWER(dg.name || ' ' || dg.flastname || ' ' || dg.slastname) LIKE LOWER('%${data.nombre}%')
+                    END
+                )
+            AND 
+                (
+                    r.analys_date = '${data.fecha}'
+                );`
+            }
+        }
+        pool.query(query, (error, result) => {
+            return error ? reject(error) : resolve(result.rows);
+        });
+    });
+}
+
 function paciente(id){
     return new Promise((resolve, reject) => {
         const pool = new Pool(dbconfig); // Crear una nueva pool para cada consulta
@@ -211,7 +270,7 @@ function paciente(id){
 function reportes(idd){
     return new Promise((resolve, reject) => {
         const pool = new Pool(dbconfig); // Crear una nueva pool para cada consulta
-        pool.query(`SELECT r.id, r.acuracy, dg.name, dg.flastname, dg.slastname, r.analys_date, r.phase, r.acuracy, pa.idd
+        pool.query(`SELECT r.id, r.acuracy, dg.name, dg.flastname, dg.slastname, r.analys_date, r.phase, pa.idd
         FROM reportes r
         JOIN pacientes pa ON r.id_p = pa.id
         JOIN datos_generales dg ON pa.id = dg.id
@@ -274,5 +333,6 @@ module.exports = {
     updateu,
     reporte,
     patientsfiltered,
+    reportsfiltered,
     insert
 }

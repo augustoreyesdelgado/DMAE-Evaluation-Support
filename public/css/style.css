@@ -117,6 +117,15 @@ body {
     text-align: center;
 }
 
+.grid-container-5 {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* Define 4 columnas iguales */
+    gap: 10px; /* Espacio entre elementos */
+    margin-right: 5%;
+    margin-left: 5%;
+    /*padding-top: 20vh;*/
+}
+
 .section-30 {
     width: 30%;
     background-color: rgba(135, 135, 135, 0.546); /* Color de fondo para visualización */

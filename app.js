@@ -134,6 +134,35 @@ app.get('/records', (req, res)=>{
             });
     }
 })
+//filtrado de reportes
+app.post('/filterrecords', async (req, res)=>{
+
+    data = {
+        nombre: req.body.nameP1 || '',
+        fecha: req.body.dateP1 || '',
+        afeccion: req.body.phaseP1 || ''
+    }
+    const listafiltrada = await coneccion.reportsfiltered(req.session.idD,data);
+
+    if(req.session.loggedin){
+        res.render('records',{
+            login: true,
+            name: req.session.name,
+            id: req.session.idD,
+            listareportes : listafiltrada
+        });
+    }else{
+        res.render('login',{
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "Debe Iniciar Sesión",
+            alertIcon: 'error',
+            showConfirmButton: false,
+            time: 2000,
+            ruta: ''
+            });
+    }
+})
 //ruta lista de pacientes
 app.get('/patients', (req, res)=>{
     if(req.session.loggedin){
@@ -163,8 +192,6 @@ app.post('/filter', async (req, res)=>{
         fecha: req.body.fecha || '',
         genero: req.body.gender || ''
     }
-    console.log(req.body.fecha);
-    console.log(req.body.nameP1);
     const listafiltrada = await coneccion.patientsfiltered(req.session.idD,data);
     if(req.session.loggedin){
         res.render('patients',{
@@ -368,6 +395,7 @@ app.post('/updatepatientsd', async (req, res)=>{
     
         if(results){
             req.session.pacientes = await coneccion.pacientes(req.session.idD);
+            req.session.reportes = await coneccion.reportes(req.session.idD);
             res.render('inicio', {
             login: true,
             name: req.session.name,
@@ -397,7 +425,6 @@ app.post('/updatepatientsd', async (req, res)=>{
                 });
         }
 })
-
 //logout
 app.get('/logout', (req, res)=>{
     req.session.destroy(()=>{
@@ -590,7 +617,6 @@ app.post('/registroreporte', async (req, res)=>{
         });
     }
 })
-
 //Eliminar reporte
 app.post('/eliminarreporte', async (req, res)=>{
     console.log(req.body.idP2);
@@ -629,7 +655,6 @@ app.post('/eliminarreporte', async (req, res)=>{
             });
     }
 })
-
 //Eliminar pacientes
 app.post('/eliminarpacientes', async (req, res)=>{
     console.log('hola');
@@ -669,7 +694,6 @@ app.post('/eliminarpacientes', async (req, res)=>{
             });
     }
 })
-
 //Verifica cedula
 const responseAPI = async (license) => {
     const query = fetch("https://cedulaprofesional.sep.gob.mx/cedula/buscaCedulaJson.action", {
@@ -692,7 +716,6 @@ const responseAPI = async (license) => {
     })
     return (await query).json()
 }
-
 const license = ({
     anioreg,
     curp,
@@ -719,8 +742,7 @@ const license = ({
     type: tipo,
     title: titulo
 })
-
-
+//Arranca servidor
 app.listen(3000, (req, res)=>{
     console.log("Server is running in http://localhost:3000");
 })

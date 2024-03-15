@@ -72,11 +72,11 @@
         <div class="grid-container">
             <div class="grid-item">
                 <table>
-                    <tr>
-                        <td>Nombre</td>
+                    <td>Nombre</td>
                     </tr>
                     <tr>
-                        <td><input type="text" name="nameP" id="nameP" placeholder="Jos&eacute; Hern&aacute;ndez"></td>
+                        <form action="/filterrecords" method="post">
+                        <td><input type="text" name="nameP1" id="nameP1" placeholder="Jos&eacute; Hern&aacute;ndez"></td>
                     </tr>
                 </table>
             </div>
@@ -86,7 +86,7 @@
                         <td>Fecha (Registro)</td>
                     </tr>
                     <tr>
-                        <td><input type="date" name="fecha" id="fecha" placeholder="Jos&eacute;"></td>
+                        <td><input type="date" name="dateP1" id="dateP1" placeholder="Jos&eacute;"></td>
                     </tr>
                 </table>
             </div>
@@ -94,25 +94,25 @@
                 <table>
                     <tr>
                         <td style="font-size: medium;">
-                                <input type="radio" name="afeccion" value="" checked>
+                                <input type="radio" name="phaseP1" value="no dmae">
                                 Sin Afecci&oacute;n
                         </td>
                     </tr>
                     <tr>
                         <td style="font-size: medium;">
-                                <input type="radio" name="afeccion" value="" >
+                                <input type="radio" name="phaseP1" value="leve" >
                                 Afecci&oacute;n Leve
                         </td>
                     </tr>
                     <tr>
                         <td style="font-size: medium;">
-                                <input type="radio" name="afeccion" value="" >
+                                <input type="radio" name="phaseP1" value="moderada" >
                                 Afecci&oacute;n Moderada
                         </td>
                     </tr>
                     <tr>
                         <td style="font-size: medium;">
-                                <input type="radio" name="afeccion" value="" >
+                                <input type="radio" name="phaseP1" value="avanzada" >
                                 Afecci&oacute;n Avanzada
                         </td>
                     </tr>
@@ -121,7 +121,9 @@
             <div class="grid-item">
                 <table style="float: right;">
                     <tr>
-                        <td> <button style="margin-top: 2px; " class="button-GW">Filtrar</button></td>
+                        <td> <button style="margin-top: 2px; " class="button-GW">Filtrar</button>
+                        </form>
+                        </td>
                     </tr>
                     <tr>
                         <td> 
