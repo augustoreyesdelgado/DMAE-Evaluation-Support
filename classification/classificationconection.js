@@ -1,10 +1,11 @@
 const fs = require('fs');
+require('dotenv').config({path:'./env/.env'});
 
 async function clasifica(data){
     const response = await fetch(
-        "https://api-inference.huggingface.co/models/Augusto777/vit-base-patch16-224-dmae-va-U5-40",
+        "https://api-inference.huggingface.co/models/Augusto777/vit-base-patch16-224-U8-10b",
         {
-            headers: { Authorization: "Bearer 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" },
+            headers: { Authorization: process.env.API_KEY },
             method: "POST",
             body: data,
         }
