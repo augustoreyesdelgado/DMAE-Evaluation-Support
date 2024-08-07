@@ -1,34 +1,36 @@
 const express = require('express');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const path = require('path');
 const app = express();
-const port = 3000;
+app.use(cookieParser());
+
+require('dotenv').config({path:'./env/.env'});
+port = process.env.PORT
 
 //directorio publico
 app.use('/resources', express.static('public'));
-app.use('/resources', express.static(__dirname + 'public'));
-app.use('/storage', express.static('storage'));
-app.use('/storage', express.static(__dirname + 'storage'));
-app.use('/dataprocessing', express.static('dataprocessing'));
-app.use('/dataprocessing', express.static(__dirname + 'dataprocessing'));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Configura el motor de plantillas
 app.set('view engine', 'ejs');
-app.set('views', './views');
+app.set('views', './src/views');
 
-// Configura el middleware de sesiones
+// sesiones
 app.use(session({
-    secret:'secret',
+    secret:process.env.SECRET_KEY,
     resave: true,
     saveUninitialized: true
 }))
-// Importa las rutas
-const indexRoutes = require('./routes/index');
-// Importa las rutas
-const authRoutes = require('./routes/auth');
+// Importar las rutas
+const authRoutes = require('./src/routes/auth');
+const indexRoutes = require('./src/routes/index');
+const reportsRoutes = require('./src/routes/reports');
 
-// Usa las rutas
+// Usar las rutas
 app.use('/', indexRoutes);
 app.use('/', authRoutes);
+app.use('/', reportsRoutes);
 
 app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);

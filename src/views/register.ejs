@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMAE Evaluation Support</title>
+    <style>
+
+        table {
+               border-collapse: collapse;
+               width: 80%;
+               margin: auto;
+               margin-top: 20px; 
+           }
+   
+           td {
+               padding: 10px;
+               width: 50%;
+               font-size: large;
+           }
+   
+           td:first-child {
+               text-align: left;
+           }
+   
+           input[type="text"],
+           input[type="password"],
+           input[type="date"] {
+               width: 100%;
+               height: 3vh; 
+               box-sizing: border-box;
+               border-radius: 4px;
+               border: 1px solid #ddd;
+               font-size: large;
+           }
+           
+           select{
+               width: 100%;
+               height: 3vh; 
+               box-sizing: border-box;
+               border-radius: 4px;
+               background-color: #f2f2f2;
+               font-size: large;
+           }
+   
+       </style>
+</head>
+<body>
+    <%- include('header') %>
+    <div style="text-align: center; margin-top: 6vh; font-family: lucida console; text-decoration: underline;">
+
+        <h1>DMAE Evaluation Support</h1>
+
+    </div>
+    <div class="contenedor">
+
+        <div class="section-50"><p style="font-size: 26pt;">
+            Para registrar a un nuevo usuario, por favor ingrese los datos solicitados en el siguiente formulario. Una vez llenos los campos, de clic en el botón registrar para guardar su información.</p></div>
+
+    <div class="section-30" style="height: 87%;">
+        <h2>Registro</h2>
+        <form action="register" method="post">
+            <table>
+                <tr>
+                    <td>Nombre de usuario</td>
+                    <td><input type="text" name="user" id="user" placeholder="usuario" required></td>
+                </tr>
+                <tr>
+                    <td>Contraseña</td>
+                    <td><input type="password" name="pass" id="pass" placeholder="contraseña" required></td>
+                </tr>
+                <tr>
+                    <td>Nombre(s)</td>
+                    <td><input type="text" name="name" id="name" placeholder="Jos&eacute;" required></td>
+                </tr>
+                <tr>
+                    <td>Primer Apellido</td>
+                    <td><input type="text" name="flastname" id="flastname" placeholder="Hernandez" required></td>
+                </tr>
+                <tr>
+                    <td>Segundo Apellido</td>
+                    <td><input type="text" name="slastname" id="slastname" placeholder="Hernandez" required></td>
+                </tr>
+                <tr>
+                    <td>Cedula</td>
+                    <td><input type="text" name="cedula" id="cedula" placeholder="QWE123TY" required></td>
+                </tr>
+                <tr>
+                    <td>Fecha de nacimiento</td>
+                    <td><input type="date" name="birthdate" id="birthdate" required></td>
+                </tr>
+                <tr>
+                    <td>Estado:</td>
+                    <td>
+                        <select name="state">
+                            <option value="Aguascalientes">Aguascalientes</option>
+                            <option value="Baja California">Baja California</option>
+                            <option value="Baja California Sur">Baja California Sur</option>
+                            <option value="Campeche">Campeche</option>
+                            <option value="Chiapas">Chiapas</option>
+                            <option value="Chihuahua">Chihuahua</option>
+                            <option value="Coahuila">Coahuila</option>
+                            <option value="Colima">Colima</option>
+                            <option value="Durango">Durango</option>
+                            <option value="Estado de México">Estado de México</option>
+                            <option value="Guanajuato">Guanajuato</option>
+                            <option value="Guerrero">Guerrero</option>
+                            <option value="Hidalgo">Hidalgo</option>
+                            <option value="Jalisco">Jalisco</option>
+                            <option value="Michoacán">Michoacán</option>
+                            <option value="Morelos">Morelos</option>
+                            <option value="Nayarit">Nayarit</option>
+                            <option value="Nuevo León">Nuevo León</option>
+                            <option value="Oaxaca">Oaxaca</option>
+                            <option value="Puebla">Puebla</option>
+                            <option value="Querétaro">Querétaro</option>
+                            <option value="Quintana Roo">Quintana Roo</option>
+                            <option value="San Luis Potosí">San Luis Potosí</option>
+                            <option value="Sinaloa">Sinaloa</option>
+                            <option value="Sonora">Sonora</option>
+                            <option value="Tabasco">Tabasco</option>
+                            <option value="Tamaulipas">Tamaulipas</option>
+                            <option value="Tlaxcala">Tlaxcala</option>
+                            <option value="Veracruz">Veracruz</option>
+                            <option value="Yucatán">Yucatán</option>
+                            <option value="Zacatecas">Zacatecas</option>
+                            <option value="Ciudad de México">Ciudad de México</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ciudad</td>
+                    <td><input type="text" name="city" id="city" placeholder="C&oacute;rdoba" required></td>
+                </tr>
+            </table>
+            <br>
+            <button type="submit" class="button-G">Registrar</button>
+        </form>
+        <a href="/" style="text-decoration: none;">
+            <button style="margin-top: 10px;" class="button-GO">Cancelar</button>
+        </a>
+    </div>
+    </div>
+    <%- include('footer') %>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <% if(typeof alert != "undefined") { %>
+        <script>
+            Swal.fire({
+            title: '<%= alertTitle %>',
+            text: '<%= alertMessage %>',
+            icon: '<%= alertIcon %>',
+            showConfirmButton: <%= showConfirmButton %>,
+            timer: <%= time %>
+            }).then(()=>{
+                window.location='/<%= ruta%>'
+            })
+        </script>
+    <% } %>
+
+</body>
+</html> 
