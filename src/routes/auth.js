@@ -128,6 +128,7 @@ router.post('/actualizarcontrasena', async (req, res)=>{
 
 //logout
 router.get('/logout', (req, res)=>{
+    res.clearCookie('token');
     req.session.destroy(()=>{
         res.redirect('/');
     });
