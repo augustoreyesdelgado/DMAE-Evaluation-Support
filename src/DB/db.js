@@ -114,7 +114,8 @@ function pacientes(idd) {
             text: `SELECT pa.id, pa.gender, ge.name, ge.flastname, ge.slastname, ge.birthdate, ge.state, ge.city 
                    FROM pacientes as pa 
                    INNER JOIN datos_generales as ge ON ge.id = pa.id 
-                   WHERE pa.idd = $1`,
+                   WHERE pa.idd = $1 
+                   ORDER BY ge.flastname, ge.slastname, ge.name`,
             values: [idd]
         };
         pool.query(query, (error, result) => {
@@ -246,7 +247,8 @@ function reportes(idd) {
                    FROM reportes r
                    JOIN pacientes pa ON r.id_p = pa.id
                    JOIN datos_generales dg ON pa.id = dg.id
-                   WHERE pa.idd = $1`,
+                   WHERE pa.idd = $1
+                   ORDER BY r.analys_date DESC`,  // Ordenar por fecha de análisis
             values: [idd]
         };
         pool.query(query, (error, result) => {

@@ -22,6 +22,12 @@
             text-align: left;
         }
 
+        #table-body tr:hover {
+            background-color: #76a8ffa5; /* Cambia el color aquí según tu preferencia */
+            font-weight: bold;
+            font-size:xx-large;
+        }
+
         input[type="text"],
         input[type="date"] {
             width: 100%;
@@ -165,29 +171,8 @@
                 </table>
             </div>
             <div class="grid-item">
-                <table style="float: right;">
-                    <tr>
-                        <td>
-                            <button style="margin-top: 2px; " class="button-GW">Filtrar</button>
+                            <button style="margin-top: 2px; " class="button-GW"><i class="fas fa-filter"></i> Filtrar</button>
                         </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><form action="/updatepatients" id="formularioeditar" method="post">
-                            <input type="hidden" name="idP1" id="idP1">
-                            <button style="margin-top: 2px;" class="button-G">Editar</button>
-                        </form>
-                    </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <form action="/eliminarpacientes" id="formularioeliminar" method="post">
-                                <input type="hidden" name="idP2" id="idP2">
-                                <button style="margin-top: 2px;" class="button-GR">Eliminar</button>
-                            </form>
-                        </td>
-                    </tr>
-                </table>
             </div>
           </div>
 
@@ -197,19 +182,19 @@
                     <thead style="background-color: rgb(155, 155, 155);">
                       <tr>
                         <th style="width: 25%;">Nombre</th>
-                        <th>Sexo</th>
-                        <th>Fecha de Nacimiento</th>
-                        <th>Estado</th>
-                        <th>Localidad</th>
-                        <th></th>
+                        <th style="width: 12%;">Sexo</th>
+                        <th style="width: 12%;">Fecha de Nacimiento</th>
+                        <th style="width: 14%;">Estado</th>
+                        <th style="width: 14%;">Localidad</th>
+                        <th style="width: 18%;">Acciones</th>
                       </tr>
                     </thead>
                     <tbody id="table-body" style="background-color: white;">
                       <% listapacientes.forEach(paciente => { %>
                         <tr>
-                          <td style="text-align: center; width: 25%;"><%= paciente.name %> <%= paciente.flastname %> <%= paciente.slastname %></td>
-                          <td style="text-align: center;"><%= paciente.gender %></td>
-                          <td style="text-align: center;"><%
+                          <td style="text-align: center; width: 25%;"><%= paciente.flastname %> <%= paciente.slastname %> <%= paciente.name %></td>
+                          <td style="text-align: center; width: 12%;"><%= paciente.gender %></td>
+                          <td style="text-align: center; width: 12%;"><%
                             const birthdate = new Date(paciente.birthdate);
                             const year = birthdate.getFullYear();
                             const month = ('0' + (birthdate.getMonth() + 1)).slice(-2); 
@@ -217,10 +202,19 @@
                             const formattedBirthdate = `${year}-${month}-${day}`;
                             %> <%= formattedBirthdate %>
                           </td>
-                          <td style="text-align: center;"><%= paciente.state %></td>
-                          <td style="text-align: center;"><%= paciente.city %></td>
-                          <td>
-                            <input type="radio" name="idP" value="<%= paciente.id %>" id="idP" required>
+                          <td style="text-align: center; width: 14%;"><%= paciente.state %></td>
+                          <td style="text-align: center; width: 14%;"><%= paciente.city %></td>
+                          <td style="text-align: center; width: 18%;">
+                            <div style="display: inline-block;">
+                                <form action="/updatepatients" method="post" style="display: inline;">
+                                  <input type="hidden" name="idP1" id="idP1" value="<%= paciente.id %>">
+                                  <button style="margin-top: 2px; text-align: center;" class="button-M"><i class="fas fa-edit"></i>Actualizar</button>
+                                </form>
+                                <form action="/eliminarpacientes" class="formulario-eliminar" method="post" style="display: inline;">
+                                  <input type="hidden" name="idP2" id="idP2" value="<%= paciente.id %>">
+                                  <button style="margin-top: 2px;" class="button-MR"><i class="fas fa-trash"></i>Eliminar</button>
+                                </form>
+                              </div>
                           </td>
                         </tr>
                       <% }); %>
@@ -236,38 +230,6 @@
     <%- include('footer') %>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <script>
-        // Obtener referencia a los radio buttons
-        const radioButtons = document.querySelectorAll('input[type="radio"][id="idP"]');
-        
-        // Agregar un event listener a cada radio button
-        radioButtons.forEach(radioButton => {
-            radioButton.addEventListener('change', function() {
-                // Obtener el valor del radio button seleccionado
-                const valorSeleccionado = this.value;
-                // Asignar el valor al campo oculto del formulario
-                document.getElementById('idP1').value = valorSeleccionado;
-                document.getElementById('idP2').value = valorSeleccionado;
-            });
-        });
-    </script>
-
-    <script>
-        // Obtener referencia a los radio buttons
-        const radioButtonsG = document.querySelectorAll('input[type="radio"][id="gender"]');
-        
-        // Agregar un event listener a cada radio button
-        radioButtonsG.forEach(radioButtonG => {
-            radioButtonG.addEventListener('change', function() {
-                // Obtener el valor del radio button seleccionado
-                const valorSeleccionado = this.value;
-                // Asignar el valor al campo oculto del formulario
-                document.getElementById('generoP1').value = valorSeleccionado;
-                console.log(valorSeleccionado);
-            });
-        });
-    </script>
 
     <script src="/resources/js/alertpatients.js"></script>
 

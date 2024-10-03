@@ -174,7 +174,7 @@
     <form action="/results" method="post" enctype="multipart/form-data" style="margin-top: 10px;">
         <select style="width: 95%; margin-bottom: 5%;border-radius: 5px;" id="id_p" name="id_p">
             <% for (var i = 0; i <= listapacientes.length-1; i++){ %>
-                <option value="<%= listapacientes[i].id %>"><%= listapacientes[i].name%> <%= listapacientes[i].flastname%> <%= listapacientes[i].slastname%></option>
+                <option value="<%= listapacientes[i].id %>"><%= listapacientes[i].flastname%> <%= listapacientes[i].slastname%> <%= listapacientes[i].name%></option>
             <% } %>
         </select>
         <br>
@@ -197,7 +197,7 @@
     
         <input type="file" name="image" accept="image/*" id="imageInput" style="display: none;">
         <br><br>
-        <button type="submit" class="button-G">Generar Diagn&oacute;stico</button>
+        <button type="submit" class="button-G">Realizar Clasificación</button>
     </form>
     </div>
     </div>

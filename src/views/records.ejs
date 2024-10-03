@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DMAE Evaluation Support</title>
     <style>
-
-     table {
+        table {
             border-collapse: collapse;
             width: 80%;
             margin: auto;
@@ -16,6 +15,12 @@
             padding: 3px;
             font-size: large;
             width: 20%; /* Establece el ancho de cada columna al 25% del ancho total */
+        }
+
+        #table-body tr:hover {
+            background-color: #76a8ffa5; /* Cambia el color aquí según tu preferencia */
+            font-weight: bold;
+            font-size:x-large;
         }
 
         td:first-child {
@@ -118,30 +123,9 @@
                     </tr>
                 </table>
             </div>
-            <div class="grid-item">
-                <table style="float: right;">
-                    <tr>
-                        <td> <button style="margin-top: 2px; " class="button-GW">Filtrar</button>
-                        </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> 
-                            <form action="/printreport" id="formularioimprimir" method="post">
-                                <input type="hidden" name="idP1" id="idP1">
-                                <button style="margin-top: 2px;" class="button-G">Imprimir</button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> 
-                            <form action="/eliminarreporte" id="formularioeliminar" method="post">
-                                <input type="hidden" name="idP2" id="idP2">
-                                <button style="margin-top: 2px;" class="button-GR">Eliminar</button>
-                            </form>
-                        </td>
-                    </tr>
-                </table>
+            <div class="grid-item"> 
+                <button style="margin-top: 30px; margin-left: 12%; " class="button-GW"><i class="fas fa-filter"></i> Filtrar</button>
+                </form>
             </div>
           </div>
 
@@ -149,18 +133,16 @@
             <div class="table-container">
                 <table id="my-table" style="width: 100%; margin-top: 0px; border-color:  rgb(24, 24, 24);" border="2">
                     <thead style="background-color: rgb(155, 155, 155);">
-                      <tr>
                         <th>Paciente</th>
                         <th>Fecha</th>
                         <th>Resultado</th>
                         <th>Precisi&oacute;n</th>
-                        <th></th>
-                      </tr>
+                        <th>Acciones</th>
                     </thead>
                     <tbody id="table-body" style="background-color: white;">
                       <% listareportes.forEach(paciente => { %>
                         <tr>
-                          <td style="text-align: center;"><%= paciente.name %> <%= paciente.flastname %> <%= paciente.slastname %></td>
+                          <td style="text-align: center;"><%= paciente.flastname %> <%= paciente.slastname %> <%= paciente.name %></td>
                           <td style="text-align: center;"><%
                             const analys_date = new Date(paciente.analys_date);
                             const year = analys_date.getFullYear();
@@ -171,8 +153,18 @@
                           <td style="text-align: center;"><%= paciente.phase %></td>
                           <td style="text-align: center;"><%= paciente.acuracy %>%</td>
                           <td>
-                            <input type="radio" name="idP" value="<%= paciente.id %>" id="idP">
-                          </td>
+                            <div style="display: inline-block;">
+                                <form action="/printreport" method="post" style="display: inline;">
+                                  <input type="hidden" name="idP1" id="idP1" value="<%= paciente.id %>">
+                                  <button style="margin-top: 2px; text-align: center;" class="button-M"><i class="fas fa-print"></i> Imprimir</button>
+                                </form>
+                                <form action="/eliminarreporte" class="formulario-eliminar" method="post" style="display: inline;">
+                                  <input type="hidden" name="idP2" id="idP2" value="<%= paciente.id %>">
+                                  <button style="margin-top: 2px;" class="button-MR"><i class="fas fa-trash"></i> Eliminar</button>
+                                </form>
+                              </div>
+                            </tr>
+                          </td> 
                         </tr>
                       <% }); %>
                     </tbody>

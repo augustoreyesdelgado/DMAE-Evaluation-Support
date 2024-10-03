@@ -260,7 +260,6 @@ body {
 
 .button-M {
     padding: 8px 15px;
-    width: 30%;
     border: 2px solid #333; /* Borde gris oscuro */
     border-radius: 5px; /* Bordes redondeados */
     background-color: #646464; /* Color de fondo gris oscuro */
@@ -270,6 +269,22 @@ body {
 }
 .button-M:hover {
     background-color: #a7a7a7; /* Color de fondo gris oscuro */
+    font-size: large;
+}
+
+.button-MR {
+    padding: 8px 15px;
+    border: 2px solid #333; /* Borde gris oscuro */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #ff9514; /* Color de fondo gris oscuro */
+    color: black; /* Texto blanco */
+    font-weight: bold; /* Texto en negritas */
+    cursor: pointer;
+}
+.button-MR:hover {
+    background-color: #ff4a4a; /* Color de fondo gris oscuro */
+    color: rgb(0, 0, 0);
+    font-size: large;
 }
 
 .button-R {
