@@ -195,7 +195,11 @@
             <p>Selecciona o arrastra y suelta tu imagen aquí</p>
         </div>
     
-        <input type="file" name="image" accept="image/*" id="imageInput" style="display: none;">
+        <% if (listapacientes.length==0) { %>
+            <input type="file" name="image" accept="image/*" id="imageInput" style="display: none;" disabled>
+        <% }else { %>
+            <input type="file" name="image" accept="image/*" id="imageInput" style="display: none;">
+        <% } %>
         <br><br>
         <button type="submit" class="button-G">Realizar Clasificación</button>
     </form>
